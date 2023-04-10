@@ -66,7 +66,7 @@ def show_mask(mask, ax, random_color=False):
     # ax.imshow(mask_image)
     return mask_image
     
-def show_points(coords, labels, ax, marker_size=375):
+def show_points(coords, labels, ax, marker_size):
     pos_points = coords[labels==1]
     neg_points = coords[labels==0]
     ax.scatter(pos_points[:, 0], pos_points[:, 1], color='green', marker='*', s=marker_size, edgecolor='white', linewidth=1.25)
@@ -80,9 +80,11 @@ def show_box(box, ax):
 
 if __name__ == '__main__':
     choose_model = 'h' # 'h' for vit_h, 'l' for vit_l, 'b' for vit_b
-    samples = ['baseball', 'boat', 'bridge', 'cat',
-                        'dog', 'groceries', 'hippopotamus', 'person', 'person_kite', 'person_umbrella']
+    # samples = ['baseball', 'boat', 'bridge', 'cat',
+    #                     'dog', 'groceries', 'hippopotamus', 'person', 'person_kite', 'person_umbrella']
     # samples = ['person_umbrella']
+    samples = ['baseball', 'boat', 'bridge',
+                        'dog',  'person']
     input_points = {
         'baseball': [240, 250],
         'boat': [300, 580],
@@ -101,7 +103,7 @@ if __name__ == '__main__':
         # specify your model
         assert choose_model in ['h', 'l', 'b']
         if choose_model == 'h':
-            sam_checkpoint = "./../../pretrain/sam_vit_h_4b8939.pth"
+            sam_checkpoint = "/data0/fengrs/compression2023/Inpaint-Anything/sam/sam_vit_h_4b8939.pth"
             model_type = "vit_h"
         elif choose_model == 'l':
             sam_checkpoint = "./../../pretrain/sam_vit_l_0b3195.pth"
@@ -111,7 +113,7 @@ if __name__ == '__main__':
             model_type = "vit_b"
         
         # specify the path of your image and the point prompts
-        p_image = "./example/{}.jpg".format(sample)
+        p_image = "example/remove-anything/{}.jpg".format(sample)
         input_label = np.array([1])
         input_point =  np.array([input_points[sample]])
 
@@ -129,17 +131,24 @@ if __name__ == '__main__':
 
         image = np.array(Image.open(p_image).convert("RGB"))
         for idx in range(len(masks)):
-            plt.figure()
+            dpi = plt.rcParams['figure.dpi']
+            height, width = image.shape[:2]
+
+            fig = plt.figure(figsize=(1/0.77*width / dpi, 1/0.77*height / dpi), dpi=dpi)
             plt.imshow(image)
             plt.axis('off')
-            show_points(input_point, input_label, plt.gca())
+            marker_size = (width*0.04)**2
+            show_points(input_point, input_label, plt.gca(), marker_size=marker_size)
             mask = masks[idx]
             mask = cv2.dilate(mask, np.ones((dilate_factor, dilate_factor), np.uint8), iterations=1)
-            mask_image = show_mask(((mask)/255).astype(np.bool_), plt.gca(), random_color=False)
+
+            mask_image = show_mask(((mask)/255).astype(np.bool_), plt.gca(),  random_color=False)
             plt.imshow(mask_image)
-            plt.savefig("example/{}_masked_{}.png".format(sample, idx), dpi=300, bbox_inches='tight', pad_inches=0)
+
+            plt.savefig("example/remove-anything-new/{}_masked_{}.png".format(sample, idx), dpi=dpi, bbox_inches='tight', pad_inches=0)
+
 
             # save the mask
             mask = Image.fromarray(mask)
-            mask.save("example/{}_mask_{}.png".format(sample, idx))
+            mask.save("example/remove-anything-new/{}_mask_{}.png".format(sample, idx))
             plt.close()

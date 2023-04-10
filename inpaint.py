@@ -102,4 +102,3 @@ if __name__ == '__main__':
             cur_res = inpaint_image_with_lama(image, mask, config_path, ckpt_path)
             cur_res = Image.fromarray(cur_res)
             cur_res.save(output_path)
-            # assert 1==0
