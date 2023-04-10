@@ -1,5 +1,6 @@
 from segment_anything import SamPredictor, sam_model_registry
-import cv2
+# import cv2
+import PIL.Image as Image
 import numpy as np
 
 '''
@@ -41,8 +42,7 @@ def generate_msk(
 
     predictor = SamPredictor(sam) 
 
-    image = cv2.imread(p_image)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = np.array(Image.open(p_image).convert("RGB"))
 
     # generate image embedding
     predictor.set_image(image)
@@ -57,7 +57,7 @@ def generate_msk(
 
 
 if __name__ == '__main__':
-
+    # specify your model
     sam_checkpoint = "./../../pretrain/sam_vit_h_4b8939.pth"
     model_type = "vit_h"
 
@@ -67,10 +67,12 @@ if __name__ == '__main__':
     # sam_checkpoint = "./../../pretrain/sam_vit_b_01ec64.pth"
     # model_type = "vit_b"
 
+    # specify the path of your image and the point prompts
     p_image = "./segment_anything/notebooks/images/truck.jpg"
     input_point = np.array([[500, 375]])
     input_label = np.array([1])
 
+    # now, generate the mask
     masks, scores, logits = generate_msk(
         p_image,
         input_point,
@@ -79,6 +81,9 @@ if __name__ == '__main__':
         model_type=model_type,
         device="cuda",
     )
+
+    # save the mask
     for idx in range(len(masks)):
-        mask = masks[idx]
-        cv2.imwrite("example/example_mask_{}.png".format(idx), mask*255)
+        mask = (masks[idx]*255).astype(np.uint8)
+        mask = Image.fromarray(mask)
+        mask.save("example/example_mask_{}.png".format(idx))
