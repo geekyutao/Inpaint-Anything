@@ -80,9 +80,9 @@ def show_box(box, ax):
 
 if __name__ == '__main__':
     choose_model = 'h' # 'h' for vit_h, 'l' for vit_l, 'b' for vit_b
-    # samples = ['baseball', 'boat', 'bridge', 'cat',
-    #                     'dog', 'groceries', 'hippopotamus', 'person', 'person_kite', 'person_umbrella']
-    samples = ['person_umbrella']
+    samples = ['baseball', 'boat', 'bridge', 'cat',
+                        'dog', 'groceries', 'hippopotamus', 'person', 'person_kite', 'person_umbrella']
+    # samples = ['person_umbrella']
     input_points = {
         'baseball': [240, 250],
         'boat': [300, 580],
