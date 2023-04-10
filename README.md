@@ -17,7 +17,7 @@
 
 ## Remove Anything
 Click on an object in the image (2K image supported!), and Inpainting Anything will remove it instantly!
-- User click on an object, [Segment Anything Model](https://segment-anything.com/) (SAM) is used to segment the object and obtain an object mask.
+- Click on an object, [Segment Anything Model](https://segment-anything.com/) (SAM) is used to segment the object and obtain an object mask.
 - With the mask, inpainting models (e.g., [LaMa](https://advimman.github.io/lama-project/)) fill the "hole".
 
 <table>
