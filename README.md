@@ -62,9 +62,14 @@
   </tr>
 </table>
 
+
 ## Acknowledgments
  - [SAM](https://github.com/facebookresearch/segment-anything) from Meta AI
  - Inpainting models are from [LaMa](https://github.com/advimman/lama)
+
+ ## Other Interesting Repo
+- [Awesome Anything](https://github.com/VainF/Awesome-Anything)
+- [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
 
 
 
