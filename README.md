@@ -11,7 +11,7 @@
 
 ## Inpaint Anything Features
 - [x] Remove Anything
-- [ ] Fill Anything (coming soon)
+- [x] Fill Anything
 - [ ] Replace Anything (coming soon)
 - [ ] Demo Website (coming soon)
 
@@ -84,11 +84,21 @@ python segment_inpaint_one_img.py \
     --lama_ckpt lama/big-lama
 ```
 
-## Acknowledgments
- - [SAM](https://github.com/facebookresearch/segment-anything) from Meta AI
- - Inpainting models are from [LaMa](https://github.com/advimman/lama)
+## Fill Anything
+**Click** on an object, **type** in what you want to fill, and Inpaint Anything will **fill** it!
+- Click on an object;
+- [SAM](https://segment-anything.com/) segments the object out;
+- Input a text prompt;
+- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text.
 
- ## Other Interesting Repo
+## Acknowledgments
+- [Segment Anything](https://github.com/facebookresearch/segment-anything)
+- [LaMa](https://github.com/advimman/lama)
+- [Stable Diffusion](https://github.com/CompVis/stable-diffusion)
+
+
+
+ ## Other Interesting Repoepositories
 - [Awesome Anything](https://github.com/VainF/Awesome-Anything)
 - [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
 
