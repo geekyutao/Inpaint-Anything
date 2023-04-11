@@ -21,7 +21,7 @@ def save_array_to_img(img_arr, img_p):
 
 def predict_masks_with_sam(
         img: np.ndarray,
-        point_coords: List[List[int]],
+        point_coords: List[List[float]],
         point_labels: List[int],
         model_type: str,
         ckpt_p: str,
@@ -79,7 +79,7 @@ def setup_args(parser):
         help="Path to a single input img",
     )
     parser.add_argument(
-        "--point_coords", type=int, nargs='+', required=True,
+        "--point_coords", type=float, nargs='+', required=True,
         help="The coordinate of the point prompt, [coord_W coord_H].",
     )
     parser.add_argument(

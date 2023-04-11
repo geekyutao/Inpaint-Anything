@@ -62,6 +62,27 @@
   </tr>
 </table>
 
+## Installation
+Requires `python>=3.8`
+```bash
+python -m pip install torch torchvision torchaudio
+python -m pip install -e segment_anything
+python -m pip install -r lama/requirements.txt 
+```
+
+## Usage
+Specify an image and a point, and Inpaint-Anything will remove the object at the point.
+```bash
+python segment_inpaint_one_img.py \
+    --input_img ./example/remove-anything/dog.jpg \
+    --point_coords 200 450 \
+    --point_labels 1 \
+    --output_dir ./results \
+    --sam_model_type "vit_h" \
+    --sam_ckpt sam_vit_h_4b8939.pth \
+    --lama_config ./lama/configs/prediction/default.yaml \
+    --lama_ckpt lama/big-lama
+```
 
 ## Acknowledgments
  - [SAM](https://github.com/facebookresearch/segment-anything) from Meta AI
