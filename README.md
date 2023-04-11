@@ -29,7 +29,6 @@
   </tr>
 </table>
 
-
 <table>
   <tr>
     <td><img src="./example/remove-anything/person_pointed.png" width="100%"></td>
