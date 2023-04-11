@@ -8,15 +8,9 @@ from matplotlib import pyplot as plt
 from typing import Any, Dict, List
 
 from segment_anything import SamPredictor, sam_model_registry
-from inpaint import inpaint_img_with_lama
-
-
-def load_img_to_array(img_p):
-    return np.array(Image.open(img_p))
-
-
-def save_array_to_img(img_arr, img_p):
-    Image.fromarray(img_arr.astype(np.uint8)).save(img_p)
+from lama_inpaint import inpaint_img_with_lama
+from visual_mask_on_img import show_mask, show_points
+from utils import load_img_to_array, save_array_to_img, dilate_mask
 
 
 def predict_masks_with_sam(
@@ -42,37 +36,6 @@ def predict_masks_with_sam(
     return masks, scores, logits
 
 
-def show_mask(ax, mask, random_color=False):
-    if random_color:
-        color = np.concatenate([np.random.random(3), np.array([0.6])], axis=0)
-    else:
-        color = np.array([30 / 255, 144 / 255, 255 / 255, 0.6])
-    h, w = mask.shape[-2:]
-    mask_img = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
-    ax.imshow(mask_img)
-
-
-def show_points(ax, coords: List[List[int]], labels: List[int], size=375):
-    coords = np.array(coords)
-    labels = np.array(labels)
-    color_table = {0: 'red', 1: 'green'}
-    for label_value, color in color_table.items():
-        points = coords[labels == label_value]
-        ax.scatter(points[:, 0], points[:, 1], color=color, marker='*',
-                   s=size, edgecolor='white', linewidth=1.25)
-
-
-def dilate_mask(mask, dilate_factor=15):
-    mask = (mask * 255).astype(np.uint8)
-    mask = cv2.dilate(
-        mask,
-        np.ones((dilate_factor, dilate_factor), np.uint8),
-        iterations=1
-    )
-    mask = (mask / 255).astype(np.bool_)
-    return mask
-
-
 def setup_args(parser):
     parser.add_argument(
         "--input_img", type=str, required=True,
@@ -85,6 +48,10 @@ def setup_args(parser):
     parser.add_argument(
         "--point_labels", type=int, nargs='+', required=True,
         help="The labels of the point prompt, 1 or 0.",
+    )
+    parser.add_argument(
+        "--dilate_kernel_size", type=int, default=None,
+        help="Dilate kernel size. Default: None",
     )
     parser.add_argument(
         "--output_dir", type=str, required=True,
@@ -112,6 +79,18 @@ def setup_args(parser):
 
 
 if __name__ == "__main__":
+    """Example usage:
+    python remove_anything.py \
+        --input_img FA_demo/FA1_dog.png \
+        --point_coords 750 500 \
+        --point_labels 1 \
+        --dilate_kernel_size 15 \
+        --output_dir ./results \
+        --sam_model_type "vit_h" \
+        --sam_ckpt sam_vit_h_4b8939.pth \
+        --lama_config lama/configs/prediction/default.yaml \
+        --lama_ckpt big-lama 
+    """
     parser = argparse.ArgumentParser()
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
@@ -130,16 +109,17 @@ if __name__ == "__main__":
     masks = masks.astype(np.uint8)
 
     # dilate mask to avoid unmasked edge effect
-    dilate_factor = 15
-    masks = [dilate_mask(mask, dilate_factor) for mask in masks]
+    if args.dilate_kernel_size is not None:
+        masks = [dilate_mask(mask, args.dilate_kernel_size) for mask in masks]
 
     # visualize the segmentation results
-    Path(args.output_dir).mkdir(parents=True, exist_ok=True)
+    out_dir = Path(args.output_dir) / img_stem
+    out_dir.mkdir(parents=True, exist_ok=True)
     for idx, mask in enumerate(masks):
         # path to the results
-        pointed_img_p = Path(args.output_dir) / f"{img_stem}_pointed.png"
-        masked_img_p = Path(args.output_dir) / f"{img_stem}_masked_{idx}.png"
-        mask_p = Path(args.output_dir) / f"{img_stem}_mask_{idx}.png"
+        img_points_p = out_dir / f"with_points.png"
+        img_mask_p = out_dir / f"with_mask_{idx}.png"
+        mask_p = out_dir / f"mask_{idx}.png"
 
         # save the mask
         save_array_to_img(mask*255, mask_p)
@@ -152,14 +132,15 @@ if __name__ == "__main__":
         plt.axis('off')
         show_points(plt.gca(), [args.point_coords], args.point_labels,
                     size=(width*0.04)**2)
-        plt.savefig(pointed_img_p, bbox_inches='tight', pad_inches=0)
+        plt.savefig(img_points_p, bbox_inches='tight', pad_inches=0)
         show_mask(plt.gca(), mask, random_color=False)
-        plt.savefig(masked_img_p, bbox_inches='tight', pad_inches=0)
+        plt.savefig(img_mask_p, bbox_inches='tight', pad_inches=0)
         plt.close()
+
 
     # inpaint the masked image
     for idx, mask in enumerate(masks):
-        inpainted_img_p = Path(args.output_dir) / f"{img_stem}_inpainted_{idx}.png"
-        inpainted_img = inpaint_img_with_lama(
-            img, mask*255, args.lama_config, args.lama_ckpt)
-        save_array_to_img(inpainted_img, inpainted_img_p)
+        img_inpainted_p = out_dir/ f"inpainted_with_mask_{idx}.png"
+        img_inpainted = inpaint_img_with_lama(
+            img, mask, args.lama_config, args.lama_ckpt)
+        save_array_to_img(img_inpainted, img_inpainted_p)
