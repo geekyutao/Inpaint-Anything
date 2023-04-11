@@ -9,8 +9,8 @@ from typing import Any, Dict, List
 
 from sam_segment import predict_masks_with_sam
 from lama_inpaint import inpaint_img_with_lama
-from visual_mask_on_img import show_mask, show_points
-from utils import load_img_to_array, save_array_to_img, dilate_mask
+from utils import load_img_to_array, save_array_to_img, dilate_mask, \
+    show_mask, show_points
 
 
 def setup_args(parser):
@@ -94,9 +94,9 @@ if __name__ == "__main__":
     out_dir.mkdir(parents=True, exist_ok=True)
     for idx, mask in enumerate(masks):
         # path to the results
-        img_points_p = out_dir / f"with_points.png"
-        img_mask_p = out_dir / f"with_mask_{idx}.png"
         mask_p = out_dir / f"mask_{idx}.png"
+        img_points_p = out_dir / f"with_points.png"
+        img_mask_p = out_dir / f"with_{Path(mask_p).name}"
 
         # save the mask
         save_array_to_img(mask*255, mask_p)
