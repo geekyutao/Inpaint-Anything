@@ -2,7 +2,7 @@
   <img src="./example/IAM.png">
 </p>
 
-# **Inpaint-Anything**
+# Inpaint-Anything
 ## Segment Anything Meets Image Inpainting
 <p align="center">
   <img src="./example/framework.png" width="100%">
@@ -62,7 +62,7 @@
   </tr>
 </table>
 
-## Installation
+### Installation
 Requires `python>=3.8`
 ```bash
 python -m pip install torch torchvision torchaudio
@@ -70,7 +70,7 @@ python -m pip install -e segment_anything
 python -m pip install -r lama/requirements.txt 
 ```
 
-## Usage
+### Usage
 Specify an image and a point, and Inpaint-Anything will remove the object at the point.
 ```bash
 python segment_inpaint_one_img.py \
