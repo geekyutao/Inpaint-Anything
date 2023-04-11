@@ -12,8 +12,8 @@
 ## Inpaint Anything Features
 - [x] Remove Anything
 - [ ] Fill Anything (coming soon)
-- [ ] Replace anything (coming soon)
-- [ ] Demo website (coming soon)
+- [ ] Replace Anything (coming soon)
+- [ ] Demo Website (coming soon)
 
 
 ## Remove Anything
