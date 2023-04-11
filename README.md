@@ -24,41 +24,41 @@
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/dog_pointed.png" width="100%"></td>
-    <td><img src="./example/remove-anything/dog_masked.png" width="100%"></td>
-    <td><img src="./example/remove-anything/dog_inpainted.png" width="100%"></td>
+    <td><img src="./example/remove-anything/dog/with_points.png" width="100%"></td>
+    <td><img src="./example/remove-anything/dog/with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/dog/inpainted_with_mask.png" width="100%"></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/person_pointed.png" width="100%"></td>
-    <td><img src="./example/remove-anything/person_masked.png" width="100%"></td>
-    <td><img src="./example/remove-anything/person_inpainted.png" width="100%"></td>
+    <td><img src="./example/remove-anything/person/with_points.png" width="100%"></td>
+    <td><img src="./example/remove-anything/person/with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/person/inpainted_with_mask.png" width="100%"></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/bridge_pointed.png" width="100%"></td>
-    <td><img src="./example/remove-anything/bridge_masked.png" width="100%"></td>
-    <td><img src="./example/remove-anything/bridge_inpainted.png" width="100%"></td>
+    <td><img src="./example/remove-anything/bridge/with_points.png" width="100%"></td>
+    <td><img src="./example/remove-anything/bridge/with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/bridge/inpainted_with_mask.png" width="100%"></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/boat_pointed.png" width="100%"></td>
-    <td><img src="./example/remove-anything/boat_masked.png" width="100%"></td>
-    <td><img src="./example/remove-anything/boat_inpainted.png" width="100%"></td>
+    <td><img src="./example/remove-anything/boat/with_points.png" width="100%"></td>
+    <td><img src="./example/remove-anything/boat/with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/boat/inpainted_with_mask.png" width="100%"></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/baseball_pointed.png" width="100%"></td>
-    <td><img src="./example/remove-anything/baseball_masked.png" width="100%"></td>
-    <td><img src="./example/remove-anything/baseball_inpainted.png" width="100%"></td>
+    <td><img src="./example/remove-anything/baseball/with_points.png" width="100%"></td>
+    <td><img src="./example/remove-anything/baseball/with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/baseball/inpainted_with_mask.png" width="100%"></td>
   </tr>
 </table>
 
@@ -77,11 +77,12 @@ python segment_inpaint_one_img.py \
     --input_img ./example/remove-anything/dog.jpg \
     --point_coords 200 450 \
     --point_labels 1 \
+    --dilate_kernel_size 15 \
     --output_dir ./results \
     --sam_model_type "vit_h" \
     --sam_ckpt sam_vit_h_4b8939.pth \
     --lama_config ./lama/configs/prediction/default.yaml \
-    --lama_ckpt lama/big-lama
+    --lama_ckpt big-lama
 ```
 
 ## Acknowledgments
