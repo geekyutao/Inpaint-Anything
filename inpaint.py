@@ -1,10 +1,11 @@
 import os
 import sys
-
+import numpy as np
+import torch
+import yaml
+from PIL import Image
+from omegaconf import OmegaConf
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent / "lama"))
-
-from saicinpainting.evaluation.utils import move_to_device
 
 os.environ['OMP_NUM_THREADS'] = '1'
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
@@ -12,35 +13,33 @@ os.environ['MKL_NUM_THREADS'] = '1'
 os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
 os.environ['NUMEXPR_NUM_THREADS'] = '1'
 
-import numpy as np
-import torch
-import yaml
-from omegaconf import OmegaConf
-
+sys.path.insert(0, str(Path(__file__).resolve().parent / "lama"))
+from saicinpainting.evaluation.utils import move_to_device
 from saicinpainting.training.trainers import load_checkpoint
 from saicinpainting.evaluation.data import pad_tensor_to_modulo
 
-from PIL import Image
+
+def load_img_to_array(img_p):
+    return np.array(Image.open(img_p))
 
 
-def load_img(img_path):
-    img = np.array(Image.open(img_path))
-    img = torch.Tensor(img).float() / 255.
-    return img
+def save_array_to_img(img_arr, img_p):
+    Image.fromarray(img_arr.astype(np.uint8)).save(img_p)
+
 
 @torch.no_grad()
-def inpaint_image_with_lama(
-        image: np.ndarray,
+def inpaint_img_with_lama(
+        img: np.ndarray,
         mask: np.ndarray,
-        config_path: str,
-        ckpt_path: str,
+        config_p: str,
+        ckpt_p: str="./lama/configs/prediction/default.yaml",
         mod = 8
 ):
     assert len(mask.shape) == 2
-    image = torch.from_numpy(image).float().div(255.)
+    img = torch.from_numpy(img).float().div(255.)
     mask = torch.from_numpy(mask).float()
-    predict_config = OmegaConf.load(config_path)
-    predict_config.model.path = ckpt_path
+    predict_config = OmegaConf.load(config_p)
+    predict_config.model.path = ckpt_p
     device = torch.device(predict_config.device)
 
     train_config_path = os.path.join(
@@ -63,7 +62,7 @@ def inpaint_image_with_lama(
         model.to(device)
 
     batch = {}
-    batch['image'] = image.permute(2, 0, 1).unsqueeze(0)
+    batch['image'] = img.permute(2, 0, 1).unsqueeze(0)
     batch['mask'] = mask[None, None]
     unpad_to_size = [batch['image'].shape[2], batch['image'].shape[3]]
     batch['image'] = pad_tensor_to_modulo(batch['image'], mod)
@@ -82,9 +81,6 @@ def inpaint_image_with_lama(
     cur_res = np.clip(cur_res * 255, 0, 255).astype('uint8')
     return cur_res
 
-def load_image_to_array(image_path):
-    return np.array(Image.open(image_path), dtype=np.float32)
-
 
 if __name__ == '__main__':
     names = ['baseball', 'boat', 'bridge', 'cat',
@@ -97,8 +93,8 @@ if __name__ == '__main__':
             output_path = f'./example/{name}_inpainted_{idx}.png'
             config_path = './lama/configs/prediction/default.yaml'
             ckpt_path = "/data1/yutao/projects/IAM/lama/big-lama"
-            image = load_image_to_array(img_path)
-            mask = load_image_to_array(mask_path)
-            cur_res = inpaint_image_with_lama(image, mask, config_path, ckpt_path)
+            img = load_img_to_array(img_path)
+            mask = load_img_to_array(mask_path)
+            cur_res = inpaint_img_with_lama(img, mask, config_path, ckpt_path)
             cur_res = Image.fromarray(cur_res)
             cur_res.save(output_path)
