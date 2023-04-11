@@ -1,0 +1,9 @@
+# Python byte code, etc.
+__pycache__/
+
+# C/C++ object files/libraries
+*.o
+*.so
+
+# macOS
+**/.DS_Store
