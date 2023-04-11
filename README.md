@@ -23,7 +23,7 @@
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/dog.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/dog_pointed.png" width="100%"></td>
     <td><img src="./example/remove-anything/dog_masked.png" width="100%"></td>
     <td><img src="./example/remove-anything/dog_inpainted.png" width="100%"></td>
   </tr>
@@ -32,7 +32,7 @@
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/person.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/person_pointed.png" width="100%"></td>
     <td><img src="./example/remove-anything/person_masked.png" width="100%"></td>
     <td><img src="./example/remove-anything/person_inpainted.png" width="100%"></td>
   </tr>
@@ -40,7 +40,7 @@
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/bridge.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/bridge_pointed.png" width="100%"></td>
     <td><img src="./example/remove-anything/bridge_masked.png" width="100%"></td>
     <td><img src="./example/remove-anything/bridge_inpainted.png" width="100%"></td>
   </tr>
@@ -48,7 +48,7 @@
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/boat.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/boat_pointed.png" width="100%"></td>
     <td><img src="./example/remove-anything/boat_masked.png" width="100%"></td>
     <td><img src="./example/remove-anything/boat_inpainted.png" width="100%"></td>
   </tr>
@@ -56,7 +56,7 @@
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/baseball.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/baseball_pointed.png" width="100%"></td>
     <td><img src="./example/remove-anything/baseball_masked.png" width="100%"></td>
     <td><img src="./example/remove-anything/baseball_inpainted.png" width="100%"></td>
   </tr>
