@@ -11,7 +11,7 @@
 
 ## Inpaint Anything Features
 - [x] Remove Anything
-- [x] Fill Anything
+- [ ] Fill Anything
 - [ ] Replace Anything (coming soon)
 - [ ] Demo Website (coming soon)
 
@@ -85,12 +85,12 @@ python remove_anything.py \
     --lama_ckpt big-lama
 ```
 
-## Fill Anything
+<!-- ## Fill Anything
 **Click** on an object, **type** in what you want to fill, and Inpaint Anything will **fill** it!
 - Click on an object;
 - [SAM](https://segment-anything.com/) segments the object out;
 - Input a text prompt;
-- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text.
+- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text. -->
 
 ## Acknowledgments
 - [Segment Anything](https://github.com/facebookresearch/segment-anything)
