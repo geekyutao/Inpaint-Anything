@@ -134,6 +134,7 @@ if __name__ == "__main__":
     masks = [dilate_mask(mask, dilate_factor) for mask in masks]
 
     # visualize the segmentation results
+    Path(args.output_dir).mkdir(parents=True, exist_ok=True)
     for idx, mask in enumerate(masks):
         # path to the results
         pointed_img_p = Path(args.output_dir) / f"{img_stem}_pointed.png"
