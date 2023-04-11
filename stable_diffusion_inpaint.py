@@ -6,8 +6,6 @@ import PIL.Image as Image
 from diffusers import StableDiffusionInpaintPipeline
 from utils.mask_processing import crop_for_filling_pre, crop_for_filling_post
 
-output_dir = "/data1/yutao/projects/IAM/select_results"
-
 pipe = StableDiffusionInpaintPipeline.from_pretrained(
     "stabilityai/stable-diffusion-2-inpainting",
     # torch_dtype=torch.float16,
@@ -16,8 +14,8 @@ pipe = StableDiffusionInpaintPipeline.from_pretrained(
 pipe.to("cuda")
 
 prompt = "A cute cat on a bench, looking straight ahead, high quality"
-img_path = '/data1/yutao/projects/IAM/selected_results/FA1_dog/with_points.png'
-mask_path = '/data1/yutao/projects/IAM/selected_results/FA1_dog/mask_1.png'
+img_path = './with_points.png'
+mask_path = './mask_1.png'
 image = cv2.imread(img_path)
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
