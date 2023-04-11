@@ -73,7 +73,7 @@ python -m pip install -r lama/requirements.txt
 ### Usage
 Specify an image and a point, and Inpaint-Anything will remove the object at the point.
 ```bash
-python segment_inpaint_one_img.py \
+python remove_anything.py \
     --input_img ./example/remove-anything/dog.jpg \
     --point_coords 200 450 \
     --point_labels 1 \
