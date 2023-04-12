@@ -23,12 +23,8 @@
 | 2023-04-10 | Release the first version of Inpaint Anything | -->
 
 ## Remove Anything
-**Click** on an object in the image (2K image supported!), and Inpainting Anything will **remove** it instantly!
-- Click on an object;
-- [Segment Anything Model](https://segment-anything.com/) (SAM) segments the object out;
-- Inpainting models (e.g., [LaMa](https://advimman.github.io/lama-project/)) fill the "hole".
 
-### Demo
+
 <table>
   <tr>
     <td><img src="./example/remove-anything/dog/with_points.png" width="100%"></td>
@@ -37,6 +33,35 @@
   </tr>
 </table>
 
+**Click** on an object in the image (2K image supported!), and Inpainting Anything will **remove** it instantly!
+- Click on an object;
+- [Segment Anything Model](https://segment-anything.com/) (SAM) segments the object out;
+- Inpainting models (e.g., [LaMa](https://advimman.github.io/lama-project/)) fill the "hole".
+
+### Installation
+Requires `python>=3.8`
+```bash
+python -m pip install torch torchvision torchaudio
+python -m pip install -e segment_anything
+python -m pip install -r lama/requirements.txt 
+```
+
+### Usage
+Specify an image and a point, and Inpaint-Anything will remove the object at the point.
+```bash
+python remove_anything.py \
+    --input_img ./example/remove-anything/dog.jpg \
+    --point_coords 200 450 \
+    --point_labels 1 \
+    --dilate_kernel_size 15 \
+    --output_dir ./results \
+    --sam_model_type "vit_h" \
+    --sam_ckpt sam_vit_h_4b8939.pth \
+    --lama_config ./lama/configs/prediction/default.yaml \
+    --lama_ckpt big-lama
+```
+
+### Demo
 <table>
   <tr>
     <td><img src="./example/remove-anything/person/with_points.png" width="100%"></td>
@@ -69,37 +94,10 @@
   </tr>
 </table>
 
-### Installation
-Requires `python>=3.8`
-```bash
-python -m pip install torch torchvision torchaudio
-python -m pip install -e segment_anything
-python -m pip install -r lama/requirements.txt 
-```
 
-### Usage
-Specify an image and a point, and Inpaint-Anything will remove the object at the point.
-```bash
-python remove_anything.py \
-    --input_img ./example/remove-anything/dog.jpg \
-    --point_coords 200 450 \
-    --point_labels 1 \
-    --dilate_kernel_size 15 \
-    --output_dir ./results \
-    --sam_model_type "vit_h" \
-    --sam_ckpt sam_vit_h_4b8939.pth \
-    --lama_config ./lama/configs/prediction/default.yaml \
-    --lama_ckpt big-lama
-```
 
 ## Fill Anything
-**Click** on an object, **type** in what you want to fill, and Inpaint Anything will **fill** it!
-- Click on an object;
-- [SAM](https://segment-anything.com/) segments the object out;
-- Input a text prompt;
-- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text.
 
-### Demo
 <table>
   <caption style="text-align: center;">Text prompt: "a teddy bear on a bench"</caption>
     <tr>
@@ -108,6 +106,15 @@ python remove_anything.py \
       <td><img src="./example/fill-anything/sample1_result.png" width="100%"></td>
     </tr>
 </table>
+
+**Click** on an object, **type** in what you want to fill, and Inpaint Anything will **fill** it!
+- Click on an object;
+- [SAM](https://segment-anything.com/) segments the object out;
+- Input a text prompt;
+- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text.
+
+### Demo
+
 
 <table>
   <caption style="text-align: center;">Text prompt: "a camera lens in the hand"</caption>
