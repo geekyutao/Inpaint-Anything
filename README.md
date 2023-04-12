@@ -2,11 +2,12 @@
   <img src="./example/IAM.png">
 </p>
 
-# Inpaint-Anything
-## Segment Anything Meets Image Inpainting
+# Inpaint-Anything: Segment Anything Meets Image Inpainting
+<!-- ##  -->
 <p align="center">
   <img src="./example/framework.png" width="100%">
 </p>
+
 
 
 ## Inpaint Anything Features
@@ -15,6 +16,12 @@
 - [ ] Replace Anything (coming soon)
 - [ ] Demo Website (coming soon)
 
+<!-- ## Updates
+| Date | News |
+| ------ | --------
+| 2023-04-12 | Release the Fill Anything feature | 
+| 2023-04-10 | Release the Remove Anything feature |
+| 2023-04-10 | Release the first version of Inpaint Anything | -->
 
 ## Remove Anything
 **Click** on an object in the image (2K image supported!), and Inpainting Anything will **remove** it instantly!
