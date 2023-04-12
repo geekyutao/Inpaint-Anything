@@ -113,6 +113,28 @@ python remove_anything.py \
 - Input a text prompt;
 - Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text.
 
+### Installation
+Requires `python>=3.8`
+```bash
+python -m pip install torch torchvision torchaudio
+python -m pip install -e segment_anything
+python -m pip install diffusers transformers accelerate scipy safetensors
+```
+
+### Usage
+Specify an image, a point and text prompt, and run:
+```bash
+python remove_anything.py \
+    --input_img ./example/fill-anything/sample1.png \
+    --point_coords 750 500 \
+    --point_labels 1 \
+    --text_prompt "a teddy bear on a bench" \
+    --dilate_kernel_size 50 \
+    --output_dir ./results \
+    --sam_model_type "vit_h" \
+    --sam_ckpt sam_vit_h_4b8939.pth
+```
+
 ### Demo
 
 
