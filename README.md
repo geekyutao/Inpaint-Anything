@@ -148,6 +148,15 @@ python remove_anything.py \
 </table>
 
 <table>
+  <caption style="text-align: center;">Text prompt: "a Picasso painting on the wall"</caption>
+    <tr>
+      <td><img src="./example/fill-anything/sample5/with_points.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample5/with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample5/filled_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<table>
   <caption style="text-align: center;">Text prompt: "an aircraft carrier on the sea"</caption>
     <tr>
       <td><img src="./example/fill-anything/sample3/with_points.png" width="100%"></td>
