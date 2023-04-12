@@ -2,8 +2,7 @@
   <img src="./example/IAM.png">
 </p>
 
-# Inpaint-Anything: Segment Anything Meets Image Inpainting
-<!-- ##  -->
+# Inpaint Anything: Segment Anything Meets Image Inpainting
 <p align="center">
   <img src="./example/framework.png" width="100%">
 </p>
@@ -11,9 +10,9 @@
 
 
 ## Inpaint Anything Features
-- [x] Remove Anything
-- [x] Fill Anything
-- [ ] Replace Anything (coming soon)
+- [x] **Remove** Anything
+- [x] **Fill** Anything
+- [ ] **Replace** Anything (coming soon)
 - [ ] Demo Website (coming soon)
 
 <!-- ## Updates
@@ -29,6 +28,7 @@
 - [Segment Anything Model](https://segment-anything.com/) (SAM) segments the object out;
 - Inpainting models (e.g., [LaMa](https://advimman.github.io/lama-project/)) fill the "hole".
 
+### Demo
 <table>
   <tr>
     <td><img src="./example/remove-anything/dog/with_points.png" width="100%"></td>
@@ -99,6 +99,7 @@ python remove_anything.py \
 - Input a text prompt;
 - Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text.
 
+### Demo
 <table>
   <caption style="text-align: center;">Text prompt: "a teddy bear on a bench"</caption>
     <tr>
