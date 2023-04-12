@@ -124,7 +124,7 @@ python -m pip install diffusers transformers accelerate scipy safetensors
 ### Usage
 Specify an image, a point and text prompt, and run:
 ```bash
-python remove_anything.py \
+python fill_anything.py \
     --input_img ./example/fill-anything/sample1.png \
     --point_coords 750 500 \
     --point_labels 1 \
