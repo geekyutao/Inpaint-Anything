@@ -100,7 +100,7 @@ python remove_anything.py \
       <td><img src="./example/fill-anything/sample1_result.png" width="100%"></td>
     </tr>
   </table>
-  <figcaption style="text-align: center;">Text prompt: "a teddy bear on a bench" </figcaption>
+  <center><figcaption>Text prompt: "a teddy bear on a bench" </figcaption>
 </figure>
 
 <figure>
@@ -111,7 +111,7 @@ python remove_anything.py \
       <td><img src="./example/fill-anything/sample2_result.png" width="100%"></td>
     </tr>
   </table>
-  <figcaption style="text-align: center;">Text prompt: "a camera lens in the hand" </figcaption>
+  <center><figcaption>Text prompt: "a camera lens in the hand" </figcaption>
 </figure>
 
 <figure>
@@ -122,7 +122,7 @@ python remove_anything.py \
       <td><img src="./example/fill-anything/sample3_result.png" width="100%"></td>
     </tr>
   </table>
-  <figcaption style="text-align: center;">Text prompt: "an aircraft carrier on the sea" </figcaption>
+  <center><figcaption>Text prompt: "an aircraft carrier on the sea" </figcaption>
 </figure>
 
 <figure>
@@ -133,7 +133,7 @@ python remove_anything.py \
       <td><img src="./example/fill-anything/sample4_result.png" width="100%"></td>
     </tr>
   </table>
-  <figcaption style="text-align: center;">Text prompt: "a sports car on a road" </figcaption>
+  <center><figcaption>Text prompt: "a sports car on a road" </figcaption>
 </figure>
 
 
