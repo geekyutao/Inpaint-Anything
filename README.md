@@ -11,7 +11,7 @@
 
 ## Inpaint Anything Features
 - [x] Remove Anything
-- [ ] Fill Anything
+- [x] Fill Anything
 - [ ] Replace Anything (coming soon)
 - [ ] Demo Website (coming soon)
 
@@ -85,12 +85,57 @@ python remove_anything.py \
     --lama_ckpt big-lama
 ```
 
-<!-- ## Fill Anything
+## Fill Anything
 **Click** on an object, **type** in what you want to fill, and Inpaint Anything will **fill** it!
 - Click on an object;
 - [SAM](https://segment-anything.com/) segments the object out;
 - Input a text prompt;
-- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text. -->
+- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) fill the "hole" according to the text.
+
+<figure>
+  <table>
+    <tr>
+      <td><img src="./example/fill-anything/sample1_point.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1_masked.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1_result.png" width="100%"></td>
+    </tr>
+  </table>
+  <figcaption style="text-align: center;">Text prompt: "a teddy bear on a bench" </figcaption>
+</figure>
+
+<figure>
+  <table>
+    <tr>
+      <td><img src="./example/fill-anything/sample2_point.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2_masked.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2_result.png" width="100%"></td>
+    </tr>
+  </table>
+  <figcaption style="text-align: center;">Text prompt: "a camera lens in the hand" </figcaption>
+</figure>
+
+<figure>
+  <table>
+    <tr>
+      <td><img src="./example/fill-anything/sample3_point.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3_masked.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3_result.png" width="100%"></td>
+    </tr>
+  </table>
+  <figcaption style="text-align: center;">Text prompt: "an aircraft carrier on the sea" </figcaption>
+</figure>
+
+<figure>
+  <table>
+    <tr>
+      <td><img src="./example/fill-anything/sample4_point.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4_masked.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4_result.png" width="100%"></td>
+    </tr>
+  </table>
+  <figcaption style="text-align: center;">Text prompt: "a sports car on a road" </figcaption>
+</figure>
+
 
 ## Acknowledgments
 - [Segment Anything](https://github.com/facebookresearch/segment-anything)
