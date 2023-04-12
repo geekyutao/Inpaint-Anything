@@ -6,8 +6,8 @@ from matplotlib import pyplot as plt
 from typing import Any, Dict, List
 
 from segment_anything import SamPredictor, sam_model_registry
-from visual_mask_on_img import show_mask, show_points
-from utils import load_img_to_array, save_array_to_img, dilate_mask
+from utils import load_img_to_array, save_array_to_img, dilate_mask, \
+    show_mask, show_points
 
 
 def predict_masks_with_sam(
@@ -81,7 +81,6 @@ if __name__ == "__main__":
     args = parser.parse_args(sys.argv[1:])
 
     img = load_img_to_array(args.input_img)
-    img_stem = Path(args.input_img).stem
 
     masks, _, _ = predict_masks_with_sam(
         img,
@@ -91,13 +90,14 @@ if __name__ == "__main__":
         ckpt_p=args.sam_ckpt,
         device="cuda",
     )
-    masks = masks.astype(np.uint8)
+    masks = masks.astype(np.uint8) * 255
 
     # dilate mask to avoid unmasked edge effect
     if args.dilate_kernel_size is not None:
         masks = [dilate_mask(mask, args.dilate_kernel_size) for mask in masks]
 
     # visualize the segmentation results
+    img_stem = Path(args.input_img).stem
     out_dir = Path(args.output_dir) / img_stem
     out_dir.mkdir(parents=True, exist_ok=True)
     for idx, mask in enumerate(masks):
@@ -107,7 +107,7 @@ if __name__ == "__main__":
         mask_p = out_dir / f"mask_{idx}.png"
 
         # save the mask
-        save_array_to_img(mask*255, mask_p)
+        save_array_to_img(mask, mask_p)
 
         # save the pointed and masked image
         dpi = plt.rcParams['figure.dpi']

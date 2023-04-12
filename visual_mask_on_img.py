@@ -29,7 +29,7 @@ if __name__ == "__main__":
     """Example usage:
     python visual_mask_on_img.py \
         --input_img FA_demo/FA1_dog.png \
-        --input_mask_glob "results/FA1_dog/mask_*.png" \
+        --input_mask_glob "results/FA1_dog/mask*.png" \
         --output_dir results
     """
     parser = argparse.ArgumentParser()

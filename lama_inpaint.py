@@ -108,7 +108,7 @@ if __name__ == "__main__":
     """Example usage:
     python lama_inpaint.py \
         --input_img FA_demo/FA1_dog.png \
-        --input_mask_glob "results/FA1_dog/mask_*.png" \
+        --input_mask_glob "results/FA1_dog/mask*.png" \
         --output_dir results \
         --lama_config lama/configs/prediction/default.yaml \
         --lama_ckpt big-lama 
@@ -117,18 +117,15 @@ if __name__ == "__main__":
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
 
-    img = load_img_to_array(args.input_img)
     img_stem = Path(args.input_img).stem
-
     mask_ps = sorted(glob.glob(args.input_mask_glob))
-
     out_dir = Path(args.output_dir) / img_stem
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    img = load_img_to_array(args.input_img)
     for mask_p in mask_ps:
         mask = load_img_to_array(mask_p)
         img_inpainted_p = out_dir / f"inpainted_with_{Path(mask_p).name}"
-
         img_inpainted = inpaint_img_with_lama(
             img, mask, args.lama_config, args.lama_ckpt)
         save_array_to_img(img_inpainted, img_inpainted_p)

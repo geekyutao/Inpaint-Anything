@@ -2,38 +2,15 @@ import cv2
 import sys
 import argparse
 import numpy as np
-from PIL import Image
+import torch
 from pathlib import Path
 from matplotlib import pyplot as plt
 from typing import Any, Dict, List
 
-from segment_anything import SamPredictor, sam_model_registry
-from lama_inpaint import inpaint_img_with_lama
-from visual_mask_on_img import show_mask, show_points
-from utils import load_img_to_array, save_array_to_img, dilate_mask
-
-
-def predict_masks_with_sam(
-        img: np.ndarray,
-        point_coords: List[List[float]],
-        point_labels: List[int],
-        model_type: str,
-        ckpt_p: str,
-        device="cuda"
-):
-    point_coords = np.array(point_coords)
-    point_labels = np.array(point_labels)
-    sam = sam_model_registry[model_type](checkpoint=ckpt_p)
-    sam.to(device=device)
-    predictor = SamPredictor(sam)
-
-    predictor.set_image(img)
-    masks, scores, logits = predictor.predict(
-        point_coords=point_coords,
-        point_labels=point_labels,
-        multimask_output=True,
-    )
-    return masks, scores, logits
+from sam_segment import predict_masks_with_sam
+from stable_diffusion_inpaint import inpaint_img_with_sd
+from utils import load_img_to_array, save_array_to_img, dilate_mask, \
+    show_mask, show_points
 
 
 def setup_args(parser):
@@ -48,6 +25,10 @@ def setup_args(parser):
     parser.add_argument(
         "--point_labels", type=int, nargs='+', required=True,
         help="The labels of the point prompt, 1 or 0.",
+    )
+    parser.add_argument(
+        "--text_prompt", type=str, required=True,
+        help="Text prompt",
     )
     parser.add_argument(
         "--dilate_kernel_size", type=int, default=None,
@@ -67,34 +48,33 @@ def setup_args(parser):
         help="The path to the SAM checkpoint to use for mask generation.",
     )
     parser.add_argument(
-        "--lama_config", type=str,
-        default="./lama/configs/prediction/default.yaml",
-        help="The path to the config file of lama model. "
-             "Default: the config of big-lama",
+        "--seed", type=int,
+        help="Specify seed for reproducibility.",
     )
     parser.add_argument(
-        "--lama_ckpt", type=str, required=True,
-        help="The path to the lama checkpoint.",
+        "--deterministic", action="store_true",
+        help="Use deterministic algorithms for reproducibility.",
     )
+
 
 
 if __name__ == "__main__":
     """Example usage:
-    python fill_anything.py \
+    python remove_anything.py \
         --input_img FA_demo/FA1_dog.png \
         --point_coords 750 500 \
         --point_labels 1 \
+        --text_prompt "a teddy bear on a bench" \
         --dilate_kernel_size 15 \
         --output_dir ./results \
         --sam_model_type "vit_h" \
-        --sam_ckpt sam_vit_h_4b8939.pth \
+        --sam_ckpt sam_vit_h_4b8939.pth 
     """
     parser = argparse.ArgumentParser()
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
 
     img = load_img_to_array(args.input_img)
-    img_stem = Path(args.input_img).stem
 
     masks, _, _ = predict_masks_with_sam(
         img,
@@ -104,23 +84,24 @@ if __name__ == "__main__":
         ckpt_p=args.sam_ckpt,
         device="cuda",
     )
-    masks = masks.astype(np.uint8)
+    masks = masks.astype(np.uint8) * 255
 
     # dilate mask to avoid unmasked edge effect
     if args.dilate_kernel_size is not None:
         masks = [dilate_mask(mask, args.dilate_kernel_size) for mask in masks]
 
     # visualize the segmentation results
+    img_stem = Path(args.input_img).stem
     out_dir = Path(args.output_dir) / img_stem
     out_dir.mkdir(parents=True, exist_ok=True)
     for idx, mask in enumerate(masks):
         # path to the results
-        img_points_p = out_dir / f"with_points.png"
-        img_mask_p = out_dir / f"with_mask_{idx}.png"
         mask_p = out_dir / f"mask_{idx}.png"
+        img_points_p = out_dir / f"with_points.png"
+        img_mask_p = out_dir / f"with_{Path(mask_p).name}"
 
         # save the mask
-        save_array_to_img(mask*255, mask_p)
+        save_array_to_img(mask, mask_p)
 
         # save the pointed and masked image
         dpi = plt.rcParams['figure.dpi']
@@ -135,7 +116,11 @@ if __name__ == "__main__":
         plt.savefig(img_mask_p, bbox_inches='tight', pad_inches=0)
         plt.close()
 
-
-    # crop image to 512x512
-
-    # stable diffusion
+    # fill the masked image
+    for idx, mask in enumerate(masks):
+        if args.seed is not None:
+            torch.manual_seed(args.seed)
+        mask_p = out_dir / f"mask_{idx}.png"
+        img_filled_p = out_dir / f"filled_with_{Path(mask_p).name}"
+        img_filled = inpaint_img_with_sd(img, mask, args.text_prompt)
+        save_array_to_img(img_filled, img_filled_p)

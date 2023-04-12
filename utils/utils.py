@@ -13,17 +13,16 @@ def save_array_to_img(img_arr, img_p):
 
 
 def dilate_mask(mask, dilate_factor=15):
-    if np.max(mask) == 1:
-        mask = (mask * 255).astype(np.uint8)
+    mask = mask.astype(np.uint8)
     mask = cv2.dilate(
         mask,
         np.ones((dilate_factor, dilate_factor), np.uint8),
         iterations=1
     )
-    mask = (mask / 255).astype(np.bool_)
     return mask
 
-def show_mask(ax, mask, random_color=False):
+def show_mask(ax, mask: np.ndarray, random_color=False):
+    mask = mask.astype(np.uint8)
     if np.max(mask) == 255:
         mask = mask / 255
     if random_color:

@@ -1,11 +1,9 @@
-import cv2
+import torch
 import sys
 import argparse
 import numpy as np
-from PIL import Image
 from pathlib import Path
 from matplotlib import pyplot as plt
-from typing import Any, Dict, List
 
 from sam_segment import predict_masks_with_sam
 from lama_inpaint import inpaint_img_with_lama
@@ -73,7 +71,6 @@ if __name__ == "__main__":
     args = parser.parse_args(sys.argv[1:])
 
     img = load_img_to_array(args.input_img)
-    img_stem = Path(args.input_img).stem
 
     masks, _, _ = predict_masks_with_sam(
         img,
@@ -83,13 +80,14 @@ if __name__ == "__main__":
         ckpt_p=args.sam_ckpt,
         device="cuda",
     )
-    masks = masks.astype(np.uint8)
+    masks = masks.astype(np.uint8) * 255
 
     # dilate mask to avoid unmasked edge effect
     if args.dilate_kernel_size is not None:
         masks = [dilate_mask(mask, args.dilate_kernel_size) for mask in masks]
 
     # visualize the segmentation results
+    img_stem = Path(args.input_img).stem
     out_dir = Path(args.output_dir) / img_stem
     out_dir.mkdir(parents=True, exist_ok=True)
     for idx, mask in enumerate(masks):
@@ -99,7 +97,7 @@ if __name__ == "__main__":
         img_mask_p = out_dir / f"with_{Path(mask_p).name}"
 
         # save the mask
-        save_array_to_img(mask*255, mask_p)
+        save_array_to_img(mask, mask_p)
 
         # save the pointed and masked image
         dpi = plt.rcParams['figure.dpi']
@@ -114,10 +112,10 @@ if __name__ == "__main__":
         plt.savefig(img_mask_p, bbox_inches='tight', pad_inches=0)
         plt.close()
 
-
     # inpaint the masked image
     for idx, mask in enumerate(masks):
-        img_inpainted_p = out_dir/ f"inpainted_with_mask_{idx}.png"
+        mask_p = out_dir / f"mask_{idx}.png"
+        img_inpainted_p = out_dir / f"inpainted_with_{Path(mask_p).name}"
         img_inpainted = inpaint_img_with_lama(
             img, mask, args.lama_config, args.lama_ckpt)
         save_array_to_img(img_inpainted, img_inpainted_p)

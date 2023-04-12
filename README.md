@@ -103,36 +103,36 @@ python remove_anything.py \
 <table>
   <caption style="text-align: center;">Text prompt: "a teddy bear on a bench"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample1_point.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample1_masked.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample1_result.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1/with_points.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1/with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1/filled_with_mask.png" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption style="text-align: center;">Text prompt: "a camera lens in the hand"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample2_point.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample2_masked.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample2_result.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2/with_points.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2/with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2/filled_with_mask.png" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption style="text-align: center;">Text prompt: "an aircraft carrier on the sea"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample3_point.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample3_masked.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample3_result.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3/with_points.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3/with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3/filled_with_mask.png" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption style="text-align: center;">Text prompt: "a sports car on a road"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample4_point.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample4_masked.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample4_result.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4/with_points.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4/with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4/filled_with_mask.png" width="100%"></td>
     </tr>
 </table>
 
