@@ -21,6 +21,15 @@ def dilate_mask(mask, dilate_factor=15):
     )
     return mask
 
+def erode_mask(mask, dilate_factor=15):
+    mask = mask.astype(np.uint8)
+    mask = cv2.erode(
+        mask,
+        np.ones((dilate_factor, dilate_factor), np.uint8),
+        iterations=1
+    )
+    return mask
+
 def show_mask(ax, mask: np.ndarray, random_color=False):
     mask = mask.astype(np.uint8)
     if np.max(mask) == 255:
