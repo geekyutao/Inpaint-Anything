@@ -12,7 +12,7 @@
 ## Inpaint Anything Features
 - [x] **Remove** Anything
 - [x] **Fill** Anything
-- [ ] **Replace** Anything (coming soon)
+- [x] **Replace** Anything
 - [x] Any aspect ratio supported
 - [x] 2K resolution supported
 - [ ] Demo Website (coming soon)
@@ -140,7 +140,6 @@ python fill_anything.py \
 
 ### Demo
 
-
 <table>
   <caption style="text-align: center;">Text prompt: "a camera lens in the hand"</caption>
     <tr>
@@ -174,6 +173,60 @@ python fill_anything.py \
       <td><img src="./example/fill-anything/sample4/with_points.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample4/with_mask.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample4/filled_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+
+## Replace Anything
+
+<table>
+  <caption style="text-align: center;">Text prompt: "sit on the swing"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/dog/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+**Click** on an object, **type** in what background you want to replace, and Inpaint Anything will **replace** it!
+- Click on an object;
+- [SAM](https://segment-anything.com/) segments the object out;
+- Input a text prompt;
+- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) replace the background according to the text.
+
+<table>
+  <caption style="text-align: center;">Text prompt: "a bus, on the center of a country road, summer"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/bus/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/bus/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/bus/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+  <caption style="text-align: center;">Text prompt: "breakfast"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/000000029675/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000029675/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000029675/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+  <caption style="text-align: center;">Text prompt: "a man in office"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/man/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+  <caption style="text-align: center;">Text prompt: "crossroad in the city"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/000000000724/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000000724/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000000724/replaced_with_mask.png" width="100%"></td>
     </tr>
 </table>
 
