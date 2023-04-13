@@ -13,7 +13,10 @@
 - [x] **Remove** Anything
 - [x] **Fill** Anything
 - [ ] **Replace** Anything (coming soon)
+- [x] Any aspect ratio
+- [x] 2K resolution supported
 - [ ] Demo Website (coming soon)
+
 
 <!-- ## Updates
 | Date | News |
