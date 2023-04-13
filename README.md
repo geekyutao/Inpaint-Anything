@@ -232,7 +232,7 @@ python fill_anything.py \
     </tr>
 </table>
 
-## Cite Us
+<!-- ## Cite Us -->
 
 
 ## Acknowledgments
