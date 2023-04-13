@@ -3,8 +3,10 @@
 </p>
 
 # Inpaint Anything: Segment Anything Meets Image Inpainting
+- Authors: Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen.
+- Paper: [arXiv]() (releasing)
 <p align="center">
-  <img src="./example/framework.png" width="100%">
+  <img src="./example/MainFramework.png" width="100%">
 </p>
 
 
@@ -36,7 +38,7 @@
   </tr>
 </table>
 
-**Click** on an object in the image (2K image supported!), and Inpainting Anything will **remove** it instantly!
+**Click** on an object in the image, and Inpainting Anything will **remove** it instantly!
 - Click on an object;
 - [Segment Anything Model](https://segment-anything.com/) (SAM) segments the object out;
 - Inpainting models (e.g., [LaMa](https://advimman.github.io/lama-project/)) fill the "hole".
@@ -230,6 +232,8 @@ python fill_anything.py \
     </tr>
 </table>
 
+## Cite Us
+
 
 ## Acknowledgments
 - [Segment Anything](https://github.com/facebookresearch/segment-anything)
@@ -241,6 +245,16 @@ python fill_anything.py \
  ## Other Interesting Repoepositories
 - [Awesome Anything](https://github.com/VainF/Awesome-Anything)
 - [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
+
+<!-- ## Citation
+If you find this project helpful, please cite the following BibTeX entry.
+```BibTex
+@article{kirillov2023segany,
+  title={Segment Anything}, 
+  author={Kirillov, Alexander and Mintun, Eric and Ravi, Nikhila and Mao, Hanzi and Rolland, Chloe and Gustafson, Laura and Xiao, Tete and Whitehead, Spencer and Berg, Alexander C. and Lo, Wan-Yen and Doll{\'a}r, Piotr and Girshick, Ross},
+  journal={arXiv:2304.02643},
+  year={2023}
+} -->
 
 
 
