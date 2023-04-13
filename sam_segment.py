@@ -102,9 +102,9 @@ if __name__ == "__main__":
     out_dir.mkdir(parents=True, exist_ok=True)
     for idx, mask in enumerate(masks):
         # path to the results
-        img_points_p = out_dir / f"with_points.png"
-        img_mask_p = out_dir / f"with_mask_{idx}.png"
         mask_p = out_dir / f"mask_{idx}.png"
+        img_points_p = out_dir / f"with_points.png"
+        img_mask_p = out_dir / f"with_{Path(mask_p).name}"
 
         # save the mask
         save_array_to_img(mask, mask_p)
