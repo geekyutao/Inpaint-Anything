@@ -3,18 +3,25 @@
 </p>
 
 # Inpaint Anything: Segment Anything Meets Image Inpainting
+- Authors: Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen.
+- Institute：University of Science and Technology of China; Eastern Institute for Advanced Study.
+- Paper: [arXiv]() (releasing)
 <p align="center">
-  <img src="./example/framework.png" width="100%">
+  <img src="./example/MainFramework.png" width="100%">
 </p>
 
+TL; DR: Users can select any object in an image by clicking on it. With powerful vision models, e.g., [SAM](https://arxiv.org/abs/2304.02643), [LaMa](https://arxiv.org/abs/2109.07161) and [Stable Diffusion (SD)](https://arxiv.org/abs/2112.10752), **Inpaint Anything** is able to remove the object smoothly (i.e., *Remove Anything*). Further, prompted by user input text, Inpaint Anything can fill the object with any desired content (i.e., *Fill Anything*) or replace the background of it arbitrarily (i.e., *Replace Anything*).
 
 
-## Inpaint Anything Features
+## 🌟 Inpaint Anything Features
 - [x] **Remove** Anything
 - [x] **Fill** Anything
-- [ ] **Replace** Anything (coming soon)
+- [x] **Replace** Anything
+
+## 💡 Highlights
 - [x] Any aspect ratio supported
 - [x] 2K resolution supported
+- [x] [Technical report on arXiv]()
 - [ ] Demo Website (coming soon)
 
 
@@ -25,7 +32,7 @@
 | 2023-04-10 | Release the Remove Anything feature |
 | 2023-04-10 | Release the first version of Inpaint Anything | -->
 
-## Remove Anything
+## 🔥 Remove Anything
 
 
 <table>
@@ -36,7 +43,7 @@
   </tr>
 </table>
 
-**Click** on an object in the image (2K image supported!), and Inpainting Anything will **remove** it instantly!
+**Click** on an object in the image, and Inpainting Anything will **remove** it instantly!
 - Click on an object;
 - [Segment Anything Model](https://segment-anything.com/) (SAM) segments the object out;
 - Inpainting models (e.g., [LaMa](https://advimman.github.io/lama-project/)) fill the "hole".
@@ -99,7 +106,7 @@ python remove_anything.py \
 
 
 
-## Fill Anything
+## 🔥 Fill Anything
 
 <table>
   <caption style="text-align: center;">Text prompt: "a teddy bear on a bench"</caption>
@@ -140,7 +147,6 @@ python fill_anything.py \
 
 ### Demo
 
-
 <table>
   <caption style="text-align: center;">Text prompt: "a camera lens in the hand"</caption>
     <tr>
@@ -178,6 +184,62 @@ python fill_anything.py \
 </table>
 
 
+## 🔥 Replace Anything
+
+<table>
+  <caption style="text-align: center;">Text prompt: "a man in office"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/man/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+**Click** on an object, **type** in what background you want to replace, and Inpaint Anything will **replace** it!
+- Click on an object;
+- [SAM](https://segment-anything.com/) segments the object out;
+- Input a text prompt;
+- Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) replace the background according to the text.
+
+### Demo
+<table>
+  <caption style="text-align: center;">Text prompt: "sit on the swing"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/dog/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+  <caption style="text-align: center;">Text prompt: "a bus, on the center of a country road, summer"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/bus/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/bus/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/bus/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+  <caption style="text-align: center;">Text prompt: "breakfast"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/000000029675/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000029675/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000029675/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+  <caption style="text-align: center;">Text prompt: "crossroad in the city"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/000000000724/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000000724/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000000724/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
+
+<!-- ## Cite Us -->
+
 
 ## Acknowledgments
 - [Segment Anything](https://github.com/facebookresearch/segment-anything)
@@ -186,13 +248,26 @@ python fill_anything.py \
 
 
 
- ## Other Interesting Repoepositories
+ ## Other Interesting Repositories
 - [Awesome Anything](https://github.com/VainF/Awesome-Anything)
 - [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
 
+## 📜 Citation
+If you find this work useful for your research, please cite our github repo:
+```bibtex
+@misc{yu2023inpaint,
+    title = {Inpaint Anything: Segment Anything Meets Image Inpainting},
+    author = {Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
+    url = {https://github.com/geekyutao/Inpaint-Anything},
+    year = {2023}
+}
+```
 
-
-
-
-
-
+<!-- ## Citation
+If you find this project helpful, please cite the following BibTeX entry.
+```BibTex
+@article{yu2023inpaint,
+  title={Inpaint Anything: Segment Anything Meets Image Inpainting}, 
+  author={Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
+  year={2023}
+} -->
