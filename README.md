@@ -178,6 +178,7 @@ python fill_anything.py \
 </table>
 
 
+
 ## Acknowledgments
 - [Segment Anything](https://github.com/facebookresearch/segment-anything)
 - [LaMa](https://github.com/advimman/lama)

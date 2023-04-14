@@ -1,91 +1,124 @@
-from utils import load_img_to_array, save_array_to_img
-import torch
-from diffusers import StableDiffusionInpaintPipeline
-from PIL import Image
+import cv2
+import sys
+import argparse
 import numpy as np
-from utils.crop_for_replacing import recover_size, resize_and_pad
+import torch
+from pathlib import Path
+from matplotlib import pyplot as plt
+from typing import Any, Dict, List
+from sam_segment import predict_masks_with_sam
+from stable_diffusion_inpaint import replace_img_with_sd
+from utils import load_img_to_array, save_array_to_img, dilate_mask, \
+    show_mask, show_points
 
 
-def replace_img_with_sd(
-        img: np.ndarray,
-        mask: np.ndarray,
-        text_prompt: str,
-        step: int = 50,
-        device="cuda"
-):
-    pipe = StableDiffusionInpaintPipeline.from_pretrained(
-        "stabilityai/stable-diffusion-2-inpainting",
-        torch_dtype=torch.float32,
-    ).to(device)
-    img_padded, mask_padded, padding_factors = resize_and_pad(img, mask)
-    img_padded = pipe(
-        prompt=text_prompt,
-        image=Image.fromarray(img_padded),
-        mask_image=Image.fromarray(255 - mask_padded),
-        num_inference_steps=step,
-    ).images[0]
-    height, width, _ = img.shape
-    img_resized, mask_resized = recover_size(
-        np.array(img_padded), mask_padded, (height, width), padding_factors)
-    mask_resized = np.expand_dims(mask_resized, -1) / 255
-    img_resized = img_resized * (1-mask_resized) + img * mask_resized
-    return img_resized
+def setup_args(parser):
+    parser.add_argument(
+        "--input_img", type=str, required=True,
+        help="Path to a single input img",
+    )
+    parser.add_argument(
+        "--point_coords", type=float, nargs='+', required=True,
+        help="The coordinate of the point prompt, [coord_W coord_H].",
+    )
+    parser.add_argument(
+        "--point_labels", type=int, nargs='+', required=True,
+        help="The labels of the point prompt, 1 or 0.",
+    )
+    parser.add_argument(
+        "--text_prompt", type=str, required=True,
+        help="Text prompt",
+    )
+    parser.add_argument(
+        "--dilate_kernel_size", type=int, default=None,
+        help="Dilate kernel size. Default: None",
+    )
+    parser.add_argument(
+        "--output_dir", type=str, required=True,
+        help="Output path to the directory with results.",
+    )
+    parser.add_argument(
+        "--sam_model_type", type=str,
+        default="vit_h", choices=['vit_h', 'vit_l', 'vit_b'],
+        help="The type of sam model to load. Default: 'vit_h"
+    )
+    parser.add_argument(
+        "--sam_ckpt", type=str, required=True,
+        help="The path to the SAM checkpoint to use for mask generation.",
+    )
+    parser.add_argument(
+        "--seed", type=int,
+        help="Specify seed for reproducibility.",
+    )
+    parser.add_argument(
+        "--deterministic", action="store_true",
+        help="Use deterministic algorithms for reproducibility.",
+    )
 
 
-def paints():
-    name = "paints"
-    seed = torch.seed()
-    torch.manual_seed(seed)
 
-    step = 50
-    img_p = f"~RI_original/{name}.png"
-    img_mask_p = f"~RI_original/{name}/mask.png"
-    text_prompt = "painting on an easel in a classroom"
-    img_replaced_p = f"~RI_original/{name}/{'_'.join(text_prompt.split(' '))}_step{step}_seed{seed}.png"
+if __name__ == "__main__":
+    """Example usage:
+    python replaced_anything.py \
+        --input_img FA_demo/FA1_dog.png \
+        --point_coords 750 500 \
+        --point_labels 1 \
+        --text_prompt "sit on the swing" \
+        --output_dir ./results \
+        --sam_model_type "vit_h" \
+        --sam_ckpt sam_vit_h_4b8939.pth 
+    """
+    parser = argparse.ArgumentParser()
+    setup_args(parser)
+    args = parser.parse_args(sys.argv[1:])
 
-    img = load_img_to_array(img_p)
-    img_mask = load_img_to_array(img_mask_p)
-    img_replaced = replace_img_with_sd(img, img_mask, text_prompt, step)
-    save_array_to_img(img_replaced, img_replaced_p)
-    print(seed)
+    img = load_img_to_array(args.input_img)
 
+    masks, _, _ = predict_masks_with_sam(
+        img,
+        [args.point_coords],
+        args.point_labels,
+        model_type=args.sam_model_type,
+        ckpt_p=args.sam_ckpt,
+        device="cuda",
+    )
+    masks = masks.astype(np.uint8) * 255
 
-def bus():
-    name = "bus"
-    seed = torch.seed()
-    # seed = 7190234422448023767
-    torch.manual_seed(seed)
+    # dilate mask to avoid unmasked edge effect
+    if args.dilate_kernel_size is not None:
+        masks = [dilate_mask(mask, args.dilate_kernel_size) for mask in masks]
 
-    step = 50
-    img_p = f"~RI_original/{name}.jpeg"
-    img_mask_p = f"~RI_original/{name}/mask_1.png"
-    text_prompt = "bus in Paris street"
-    img_replaced_p = f"~RI_original/{name}/{'_'.join(text_prompt.split(' '))}_step{step}_seed{seed}.png"
+    # visualize the segmentation results
+    img_stem = Path(args.input_img).stem
+    out_dir = Path(args.output_dir) / img_stem
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for idx, mask in enumerate(masks):
+        # path to the results
+        mask_p = out_dir / f"mask_{idx}.png"
+        img_points_p = out_dir / f"with_points.png"
+        img_mask_p = out_dir / f"with_{Path(mask_p).name}"
 
-    img = load_img_to_array(img_p)
-    img_mask = load_img_to_array(img_mask_p)
-    img_replaced = replace_img_with_sd(img, img_mask, text_prompt, step)
-    save_array_to_img(img_replaced, img_replaced_p)
-    print(seed)
+        # save the mask
+        save_array_to_img(mask, mask_p)
 
+        # save the pointed and masked image
+        dpi = plt.rcParams['figure.dpi']
+        height, width = img.shape[:2]
+        plt.figure(figsize=(width/dpi/0.77, height/dpi/0.77))
+        plt.imshow(img)
+        plt.axis('off')
+        show_points(plt.gca(), [args.point_coords], args.point_labels,
+                    size=(width*0.04)**2)
+        plt.savefig(img_points_p, bbox_inches='tight', pad_inches=0)
+        show_mask(plt.gca(), mask, random_color=False)
+        plt.savefig(img_mask_p, bbox_inches='tight', pad_inches=0)
+        plt.close()
 
-def dog(index):
-    name = "dog"
-    seed = torch.seed()
-    # seed = 7190234422448023767
-    torch.manual_seed(seed)
-
-    step = 50
-    img_p = f"~RI_original/{name}.png"
-    img_mask_p = f"~RI_original/{name}/mask_1.png"
-    text_prompt = "sit on the swing"
-    # text_prompt = "on a swing"
-    img_replaced_p = f"~RI_original/{name}/{'_'.join(text_prompt.split(' '))}_step{step}_{index}_seed{seed}.png"
-
-    img = load_img_to_array(img_p)
-    img_mask = load_img_to_array(img_mask_p)
-    img_replaced = replace_img_with_sd(img, img_mask, text_prompt, step)
-    save_array_to_img(img_replaced, img_replaced_p)
-    print(seed)
-
-
+    # fill the masked image
+    for idx, mask in enumerate(masks):
+        if args.seed is not None:
+            torch.manual_seed(args.seed)
+        mask_p = out_dir / f"mask_{idx}.png"
+        img_replaced_p = out_dir / f"replaced_with_{Path(mask_p).name}"
+        img_replaced = replace_img_with_sd(img, mask, args.text_prompt, step=50)
+        save_array_to_img(img_replaced, img_replaced_p)
