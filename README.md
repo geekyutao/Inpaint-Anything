@@ -11,12 +11,13 @@
 
 
 
-## Inpaint Anything Features
+## 💡 Inpaint Anything Features
 - [x] **Remove** Anything
 - [x] **Fill** Anything
 - [x] **Replace** Anything
 - [x] Any aspect ratio supported
 - [x] 2K resolution supported
+- [x] [Technical report on arXiv]()
 - [ ] Demo Website (coming soon)
 
 
@@ -27,7 +28,7 @@
 | 2023-04-10 | Release the Remove Anything feature |
 | 2023-04-10 | Release the first version of Inpaint Anything | -->
 
-## Remove Anything
+## 🔥 Remove Anything
 
 
 <table>
@@ -101,7 +102,7 @@ python remove_anything.py \
 
 
 
-## Fill Anything
+## 🔥 Fill Anything
 
 <table>
   <caption style="text-align: center;">Text prompt: "a teddy bear on a bench"</caption>
@@ -179,14 +180,14 @@ python fill_anything.py \
 </table>
 
 
-## Replace Anything
+## 🔥 Replace Anything
 
 <table>
-  <caption style="text-align: center;">Text prompt: "sit on the swing"</caption>
+  <caption style="text-align: center;">Text prompt: "a man in office"</caption>
     <tr>
-      <td><img src="./example/replace-anything/dog/with_points.png" width="100%"></td>
-      <td><img src="./example/replace-anything/dog/with_mask.png" width="100%"></td>
-      <td><img src="./example/replace-anything/dog/replaced_with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/replaced_with_mask.png" width="100%"></td>
     </tr>
 </table>
 
@@ -195,6 +196,16 @@ python fill_anything.py \
 - [SAM](https://segment-anything.com/) segments the object out;
 - Input a text prompt;
 - Text-prompt-guided inpainting models (e.g., [Stable Diffusion](https://github.com/CompVis/stable-diffusion)) replace the background according to the text.
+
+### Demo
+<table>
+  <caption style="text-align: center;">Text prompt: "sit on the swing"</caption>
+    <tr>
+      <td><img src="./example/replace-anything/dog/with_points.png" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/replaced_with_mask.png" width="100%"></td>
+    </tr>
+</table>
 
 <table>
   <caption style="text-align: center;">Text prompt: "a bus, on the center of a country road, summer"</caption>
@@ -211,15 +222,6 @@ python fill_anything.py \
       <td><img src="./example/replace-anything/000000029675/with_points.png" width="100%"></td>
       <td><img src="./example/replace-anything/000000029675/with_mask.png" width="100%"></td>
       <td><img src="./example/replace-anything/000000029675/replaced_with_mask.png" width="100%"></td>
-    </tr>
-</table>
-
-<table>
-  <caption style="text-align: center;">Text prompt: "a man in office"</caption>
-    <tr>
-      <td><img src="./example/replace-anything/man/with_points.png" width="100%"></td>
-      <td><img src="./example/replace-anything/man/with_mask.png" width="100%"></td>
-      <td><img src="./example/replace-anything/man/replaced_with_mask.png" width="100%"></td>
     </tr>
 </table>
 
@@ -249,16 +251,8 @@ python fill_anything.py \
 <!-- ## Citation
 If you find this project helpful, please cite the following BibTeX entry.
 ```BibTex
-@article{kirillov2023segany,
-  title={Segment Anything}, 
-  author={Kirillov, Alexander and Mintun, Eric and Ravi, Nikhila and Mao, Hanzi and Rolland, Chloe and Gustafson, Laura and Xiao, Tete and Whitehead, Spencer and Berg, Alexander C. and Lo, Wan-Yen and Doll{\'a}r, Piotr and Girshick, Ross},
-  journal={arXiv:2304.02643},
+@article{yu2023inpaint,
+  title={Inpaint Anything: Segment Anything Meets Image Inpainting}, 
+  author={Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
   year={2023}
 } -->
-
-
-
-
-
-
-
