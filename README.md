@@ -250,6 +250,7 @@ python fill_anything.py \
 
  ## Other Interesting Repositories
 - [Awesome Anything](https://github.com/VainF/Awesome-Anything)
+- [Composable AI](https://github.com/Adamdad/Awesome-ComposableAI)
 - [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
 
 ## 📜 Citation
