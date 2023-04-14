@@ -249,6 +249,17 @@ python fill_anything.py \
 - [Awesome Anything](https://github.com/VainF/Awesome-Anything)
 - [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
 
+## 📜 Citation
+If you find this work useful for your research, please cite our github repo:
+```bibtex
+@misc{yu2023inpaint,
+    title = {Inpaint Anything: Segment Anything Meets Image Inpainting},
+    author = {Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
+    howpublished = {\url{[https://github.com/fudan-zvg/Semantic-Segment-Anything](https://github.com/geekyutao/Inpaint-Anything/}},
+    year = {2023}
+}
+```
+
 <!-- ## Citation
 If you find this project helpful, please cite the following BibTeX entry.
 ```BibTex
