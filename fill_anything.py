@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 from typing import Any, Dict, List
 
 from sam_segment import predict_masks_with_sam
-from stable_diffusion_inpaint import inpaint_img_with_sd
+from stable_diffusion_inpaint import fill_img_with_sd
 from utils import load_img_to_array, save_array_to_img, dilate_mask, \
     show_mask, show_points
 
@@ -60,7 +60,7 @@ def setup_args(parser):
 
 if __name__ == "__main__":
     """Example usage:
-    python remove_anything.py \
+    python fill_anything.py \
         --input_img FA_demo/FA1_dog.png \
         --point_coords 750 500 \
         --point_labels 1 \
@@ -122,5 +122,5 @@ if __name__ == "__main__":
             torch.manual_seed(args.seed)
         mask_p = out_dir / f"mask_{idx}.png"
         img_filled_p = out_dir / f"filled_with_{Path(mask_p).name}"
-        img_filled = inpaint_img_with_sd(img, mask, args.text_prompt)
+        img_filled = fill_img_with_sd(img, mask, args.text_prompt)
         save_array_to_img(img_filled, img_filled_p)
