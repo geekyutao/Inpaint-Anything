@@ -4,6 +4,7 @@
 
 # Inpaint Anything: Segment Anything Meets Image Inpainting
 - Authors: Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen.
+- Institute：University of Science and Technology of China; Eastern Institute for Advanced Study.
 - Paper: [arXiv]() (releasing)
 <p align="center">
   <img src="./example/MainFramework.png" width="100%">
@@ -16,6 +17,8 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 - [x] **Remove** Anything
 - [x] **Fill** Anything
 - [x] **Replace** Anything
+
+## 💡 Highlights
 - [x] Any aspect ratio supported
 - [x] 2K resolution supported
 - [x] [Technical report on arXiv]()
@@ -255,7 +258,7 @@ If you find this work useful for your research, please cite our github repo:
 @misc{yu2023inpaint,
     title = {Inpaint Anything: Segment Anything Meets Image Inpainting},
     author = {Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
-    howpublished = {\url{[https://github.com/fudan-zvg/Semantic-Segment-Anything](https://github.com/geekyutao/Inpaint-Anything/}},
+    howpublished = {\url{(https://github.com/geekyutao/Inpaint-Anything/}},
     year = {2023}
 }
 ```
