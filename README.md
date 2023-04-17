@@ -122,7 +122,7 @@ python remove_anything.py \
     </tr>
 </table> -->
 <p align="center">Text prompt: "a teddy bear on a bench"</p>
-<p style="text-align:center;">
+<p align="center">
     <img src="./example/GIF/Fill-sample1.gif" alt="image" style="width:400px;">
 </p>
 
@@ -203,7 +203,7 @@ python fill_anything.py \
     </tr>
 </table> -->
 <p align="center">Text prompt: "a man in office"</p>
-<p style="text-align:center;">
+<p align="center">
     <img src="./example/GIF/Replace-man.gif" alt="image" style="width:400px;">
 </p>
 
