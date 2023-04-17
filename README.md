@@ -114,7 +114,7 @@ python remove_anything.py \
 
 ## 🔥 Fill Anything
 <!-- <table>
-  <caption style="text-align: center;">Text prompt: "a teddy bear on a bench"</caption>
+  <caption align="center">Text prompt: "a teddy bear on a bench"</caption>
     <tr>
       <td><img src="./example/fill-anything/sample1/with_points.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample1/with_mask.png" width="100%"></td>
@@ -157,7 +157,7 @@ python fill_anything.py \
 ### Demo
 
 <table>
-  <caption style="text-align: center;">Text prompt: "a camera lens in the hand"</caption>
+  <caption align="center">Text prompt: "a camera lens in the hand"</caption>
     <tr>
       <td><img src="./example/fill-anything/sample2/with_points.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample2/with_mask.png" width="100%"></td>
@@ -166,7 +166,7 @@ python fill_anything.py \
 </table>
 
 <table>
-  <caption style="text-align: center;">Text prompt: "a Picasso painting on the wall"</caption>
+  <caption align="center">Text prompt: "a Picasso painting on the wall"</caption>
     <tr>
       <td><img src="./example/fill-anything/sample5/with_points.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample5/with_mask.png" width="100%"></td>
@@ -175,7 +175,7 @@ python fill_anything.py \
 </table>
 
 <table>
-  <caption style="text-align: center;">Text prompt: "an aircraft carrier on the sea"</caption>
+  <caption align="center">Text prompt: "an aircraft carrier on the sea"</caption>
     <tr>
       <td><img src="./example/fill-anything/sample3/with_points.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample3/with_mask.png" width="100%"></td>
@@ -184,7 +184,7 @@ python fill_anything.py \
 </table>
 
 <table>
-  <caption style="text-align: center;">Text prompt: "a sports car on a road"</caption>
+  <caption align="center">Text prompt: "a sports car on a road"</caption>
     <tr>
       <td><img src="./example/fill-anything/sample4/with_points.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample4/with_mask.png" width="100%"></td>
@@ -195,7 +195,7 @@ python fill_anything.py \
 
 ## 🔥 Replace Anything
 <!-- <table>
-  <caption style="text-align: center;">Text prompt: "a man in office"</caption>
+  <caption align="center">Text prompt: "a man in office"</caption>
     <tr>
       <td><img src="./example/replace-anything/man/with_points.png" width="100%"></td>
       <td><img src="./example/replace-anything/man/with_mask.png" width="100%"></td>
@@ -236,7 +236,7 @@ python fill_anything.py \
 
 ### Demo
 <table>
-  <caption style="text-align: center;">Text prompt: "sit on the swing"</caption>
+  <caption align="center">Text prompt: "sit on the swing"</caption>
     <tr>
       <td><img src="./example/replace-anything/dog/with_points.png" width="100%"></td>
       <td><img src="./example/replace-anything/dog/with_mask.png" width="100%"></td>
@@ -245,7 +245,7 @@ python fill_anything.py \
 </table>
 
 <table>
-  <caption style="text-align: center;">Text prompt: "a bus, on the center of a country road, summer"</caption>
+  <caption align="center">Text prompt: "a bus, on the center of a country road, summer"</caption>
     <tr>
       <td><img src="./example/replace-anything/bus/with_points.png" width="100%"></td>
       <td><img src="./example/replace-anything/bus/with_mask.png" width="100%"></td>
@@ -254,7 +254,7 @@ python fill_anything.py \
 </table>
 
 <table>
-  <caption style="text-align: center;">Text prompt: "breakfast"</caption>
+  <caption align="center">Text prompt: "breakfast"</caption>
     <tr>
       <td><img src="./example/replace-anything/000000029675/with_points.png" width="100%"></td>
       <td><img src="./example/replace-anything/000000029675/with_mask.png" width="100%"></td>
@@ -263,7 +263,7 @@ python fill_anything.py \
 </table>
 
 <table>
-  <caption style="text-align: center;">Text prompt: "crossroad in the city"</caption>
+  <caption align="center">Text prompt: "crossroad in the city"</caption>
     <tr>
       <td><img src="./example/replace-anything/000000000724/with_points.png" width="100%"></td>
       <td><img src="./example/replace-anything/000000000724/with_mask.png" width="100%"></td>
