@@ -35,13 +35,18 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 ## 🔥 Remove Anything
 
 
-<table>
+<!-- <table>
   <tr>
     <td><img src="./example/remove-anything/dog/with_points.png" width="100%"></td>
     <td><img src="./example/remove-anything/dog/with_mask.png" width="100%"></td>
     <td><img src="./example/remove-anything/dog/inpainted_with_mask.png" width="100%"></td>
   </tr>
-</table>
+</table> -->
+
+<p align="center">
+    <img src="./example/GIF/Remove-dog.gif"  alt="image" style="width:400px;">
+</p>
+
 
 **Click** on an object in the image, and Inpainting Anything will **remove** it instantly!
 - Click on an object;
@@ -96,6 +101,7 @@ python remove_anything.py \
   </tr>
 </table>
 
+
 <table>
   <tr>
     <td><img src="./example/remove-anything/baseball/with_points.png" width="100%"></td>
@@ -107,15 +113,18 @@ python remove_anything.py \
 
 
 ## 🔥 Fill Anything
-
-<table>
+<!-- <table>
   <caption style="text-align: center;">Text prompt: "a teddy bear on a bench"</caption>
     <tr>
       <td><img src="./example/fill-anything/sample1/with_points.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample1/with_mask.png" width="100%"></td>
       <td><img src="./example/fill-anything/sample1/filled_with_mask.png" width="100%"></td>
     </tr>
-</table>
+</table> -->
+<p align="center">Text prompt: "a teddy bear on a bench"</p>
+<div style="text-align:center;">
+    <img src="./example/GIF/Fill-sample1.gif" alt="image" style="width:400px;">
+</div>
 
 **Click** on an object, **type** in what you want to fill, and Inpaint Anything will **fill** it!
 - Click on an object;
@@ -185,15 +194,18 @@ python fill_anything.py \
 
 
 ## 🔥 Replace Anything
-
-<table>
+<!-- <table>
   <caption style="text-align: center;">Text prompt: "a man in office"</caption>
     <tr>
       <td><img src="./example/replace-anything/man/with_points.png" width="100%"></td>
       <td><img src="./example/replace-anything/man/with_mask.png" width="100%"></td>
       <td><img src="./example/replace-anything/man/replaced_with_mask.png" width="100%"></td>
     </tr>
-</table>
+</table> -->
+<p align="center">Text prompt: "a man in office"</p>
+<div style="text-align:center;">
+    <img src="./example/GIF/Replace-man.gif" alt="image" style="width:400px;">
+</div>
 
 **Click** on an object, **type** in what background you want to replace, and Inpaint Anything will **replace** it!
 - Click on an object;
