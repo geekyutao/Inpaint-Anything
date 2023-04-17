@@ -5,7 +5,7 @@
 # Inpaint Anything: Segment Anything Meets Image Inpainting
 - Authors: Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen.
 - Institutes: University of Science and Technology of China; Eastern Institute for Advanced Study.
-- Paper: [arXiv]() (releasing)
+- Paper: [arXiv](https://arxiv.org/abs/2304.06790)
 <p align="center">
   <img src="./example/MainFramework.png" width="100%">
 </p>
@@ -21,7 +21,7 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 ## 💡 Highlights
 - [x] Any aspect ratio supported
 - [x] 2K resolution supported
-- [x] [Technical report on arXiv]()
+- [x] [Technical report on arXiv](https://arxiv.org/abs/2304.06790)
 - [ ] Demo Website (coming soon)
 
 
@@ -275,13 +275,15 @@ python fill_anything.py \
 - [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
 
 ## 📜 Citation
-If you find this work useful for your research, please cite our github repo:
+If you find this work useful for your research, please cite us:
 ```bibtex
 @misc{yu2023inpaint,
-    title = {Inpaint Anything: Segment Anything Meets Image Inpainting},
-    author = {Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
-    url = {https://github.com/geekyutao/Inpaint-Anything},
-    year = {2023}
+      title={Inpaint Anything: Segment Anything Meets Image Inpainting}, 
+      author={Tao Yu and Runseng Feng and Ruoyu Feng and Jinming Liu and Xin Jin and Wenjun Zeng and Zhibo Chen},
+      year={2023},
+      eprint={2304.06790},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
 ```
 
