@@ -122,9 +122,9 @@ python remove_anything.py \
     </tr>
 </table> -->
 <p align="center">Text prompt: "a teddy bear on a bench"</p>
-<div style="text-align:center;">
+<p style="text-align:center;">
     <img src="./example/GIF/Fill-sample1.gif" alt="image" style="width:400px;">
-</div>
+</p>
 
 **Click** on an object, **type** in what you want to fill, and Inpaint Anything will **fill** it!
 - Click on an object;
@@ -203,9 +203,9 @@ python fill_anything.py \
     </tr>
 </table> -->
 <p align="center">Text prompt: "a man in office"</p>
-<div style="text-align:center;">
+<p style="text-align:center;">
     <img src="./example/GIF/Replace-man.gif" alt="image" style="width:400px;">
-</div>
+</p>
 
 **Click** on an object, **type** in what background you want to replace, and Inpaint Anything will **replace** it!
 - Click on an object;
