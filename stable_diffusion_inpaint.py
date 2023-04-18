@@ -23,6 +23,7 @@ def fill_img_with_sd(
         torch_dtype=torch.float32,
     ).to(device)
     img_crop, mask_crop = crop_for_filling_pre(img, mask)
+    print(img.shape, mask.shape, img_crop.shape, mask_crop.shape)
     img_crop_filled = pipe(
         prompt=text_prompt,
         image=Image.fromarray(img_crop),
