@@ -59,7 +59,7 @@ def setup_args(parser):
 
 if __name__ == "__main__":
     """Example usage:
-    python replaced_anything.py \
+    python replace_anything.py \
         --input_img FA_demo/FA1_dog.png \
         --point_coords 750 500 \
         --point_labels 1 \
