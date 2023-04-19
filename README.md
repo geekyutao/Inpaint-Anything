@@ -64,7 +64,7 @@ python -m pip install -r lama/requirements.txt
 ### Usage
 Download the model checkpoints provided in [segment_anything](./segment_anything/README.md) 
 and [lama](./lama/README.md) (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) 
-and [big-lama](https://disk.yandex.ru/d/ouP6l8VJ0HpMZg)).
+and [big-lama](https://disk.yandex.ru/d/ouP6l8VJ0HpMZg)), and put them into `./pretrained_models`.
 
 Specify an image and a point, and Inpaint-Anything will remove the object at the point.
 ```bash
@@ -75,9 +75,9 @@ python remove_anything.py \
     --dilate_kernel_size 15 \
     --output_dir ./results \
     --sam_model_type "vit_h" \
-    --sam_ckpt sam_vit_h_4b8939.pth \
+    --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth \
     --lama_config ./lama/configs/prediction/default.yaml \
-    --lama_ckpt big-lama
+    --lama_ckpt ./pretrained_models/big-lama
 ```
 
 ### Demo
@@ -147,6 +147,7 @@ python -m pip install diffusers transformers accelerate scipy safetensors
 ### Usage
 Download the model checkpoints provided in [segment_anything](./segment_anything/README.md)
 (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)).
+, and put them into `./pretrained_models`.
 
 Specify an image, a point and text prompt, and run:
 ```bash
@@ -158,7 +159,7 @@ python fill_anything.py \
     --dilate_kernel_size 50 \
     --output_dir ./results \
     --sam_model_type "vit_h" \
-    --sam_ckpt sam_vit_h_4b8939.pth
+    --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth
 ```
 
 ### Demo
@@ -230,7 +231,8 @@ python -m pip install diffusers transformers accelerate scipy safetensors
 
 ### Usage
 Download the model checkpoints provided in [segment_anything](./segment_anything/README.md)
-(e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)).
+(e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth))
+, and put them into `./pretrained_models`.
 
 Specify an image, a point and text prompt, and run:
 ```bash
@@ -241,7 +243,7 @@ python replace_anything.py \
     --text_prompt "sit on the swing" \
     --output_dir ./results \
     --sam_model_type "vit_h" \
-    --sam_ckpt sam_vit_h_4b8939.pth
+    --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth
 ```
 
 ### Demo

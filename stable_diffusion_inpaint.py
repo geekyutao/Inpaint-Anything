@@ -23,7 +23,6 @@ def fill_img_with_sd(
         torch_dtype=torch.float32,
     ).to(device)
     img_crop, mask_crop = crop_for_filling_pre(img, mask)
-    print(img.shape, mask.shape, img_crop.shape, mask_crop.shape)
     img_crop_filled = pipe(
         prompt=text_prompt,
         image=Image.fromarray(img_crop),
@@ -96,6 +95,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     if args.deterministic:
         os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
@@ -112,5 +112,6 @@ if __name__ == "__main__":
             torch.manual_seed(args.seed)
         mask = load_img_to_array(mask_p)
         img_filled_p = out_dir / f"filled_with_{Path(mask_p).name}"
-        img_filled = fill_img_with_sd(img, mask, args.text_prompt)
+        img_filled = fill_img_with_sd(
+            img, mask, args.text_prompt, device=device)
         save_array_to_img(img_filled, img_filled_p)

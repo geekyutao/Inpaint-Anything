@@ -29,7 +29,8 @@ def inpaint_img_with_lama(
         mask: np.ndarray,
         config_p: str,
         ckpt_p: str="./lama/configs/prediction/default.yaml",
-        mod=8
+        mod=8,
+        device="cuda"
 ):
     assert len(mask.shape) == 2
     if np.max(mask) == 1:
@@ -38,7 +39,8 @@ def inpaint_img_with_lama(
     mask = torch.from_numpy(mask).float()
     predict_config = OmegaConf.load(config_p)
     predict_config.model.path = ckpt_p
-    device = torch.device(predict_config.device)
+    # device = torch.device(predict_config.device)
+    device = torch.device(device)
 
     train_config_path = os.path.join(
         predict_config.model.path, 'config.yaml')
@@ -116,6 +118,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     img_stem = Path(args.input_img).stem
     mask_ps = sorted(glob.glob(args.input_mask_glob))
@@ -127,5 +130,5 @@ if __name__ == "__main__":
         mask = load_img_to_array(mask_p)
         img_inpainted_p = out_dir / f"inpainted_with_{Path(mask_p).name}"
         img_inpainted = inpaint_img_with_lama(
-            img, mask, args.lama_config, args.lama_ckpt)
+            img, mask, args.lama_config, args.lama_ckpt, device=device)
         save_array_to_img(img_inpainted, img_inpainted_p)

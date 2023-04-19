@@ -71,6 +71,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     img = load_img_to_array(args.input_img)
 
@@ -80,7 +81,7 @@ if __name__ == "__main__":
         args.point_labels,
         model_type=args.sam_model_type,
         ckpt_p=args.sam_ckpt,
-        device="cuda",
+        device=device,
     )
     masks = masks.astype(np.uint8) * 255
 
@@ -120,5 +121,6 @@ if __name__ == "__main__":
             torch.manual_seed(args.seed)
         mask_p = out_dir / f"mask_{idx}.png"
         img_replaced_p = out_dir / f"replaced_with_{Path(mask_p).name}"
-        img_replaced = replace_img_with_sd(img, mask, args.text_prompt, step=50)
+        img_replaced = replace_img_with_sd(
+            img, mask, args.text_prompt, device=device)
         save_array_to_img(img_replaced, img_replaced_p)

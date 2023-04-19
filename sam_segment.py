@@ -4,6 +4,7 @@ import numpy as np
 from pathlib import Path
 from matplotlib import pyplot as plt
 from typing import Any, Dict, List
+import torch
 
 from segment_anything import SamPredictor, sam_model_registry
 from utils import load_img_to_array, save_array_to_img, dilate_mask, \
@@ -79,6 +80,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     img = load_img_to_array(args.input_img)
 
@@ -88,7 +90,7 @@ if __name__ == "__main__":
         args.point_labels,
         model_type=args.sam_model_type,
         ckpt_p=args.sam_ckpt,
-        device="cuda",
+        device=device,
     )
     masks = masks.astype(np.uint8) * 255
 
