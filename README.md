@@ -234,7 +234,7 @@ Download the model checkpoints provided in [segment_anything](./segment_anything
 
 Specify an image, a point and text prompt, and run:
 ```bash
-python fill_anything.py \
+python replace_anything.py \
     --input_img ./example/replace-anything/dog.png \
     --point_coords 750 500 \
     --point_labels 1 \
