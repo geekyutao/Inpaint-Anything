@@ -60,6 +60,10 @@ python -m pip install torch torchvision torchaudio
 python -m pip install -e segment_anything
 python -m pip install -r lama/requirements.txt 
 ```
+On Windows system, we recommend to first install [miniconda](https://docs.conda.io/en/latest/miniconda.html) and 
+open `Anaconda Powershell Prompt (miniconda3)` as administrator.
+Then pip install [./lama_requirements_windows.txt](lama_requirements_windows.txt) instead of 
+[./lama/requirements.txt](lama%2Frequirements.txt).
 
 ### Usage
 Download the model checkpoints provided in [segment_anything](./segment_anything/README.md) 
