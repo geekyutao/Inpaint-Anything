@@ -58,8 +58,8 @@ Requires `python>=3.8`
 ```bash
 python -m pip install -r requirements.txt 
 cd third_party
-git clone https://github.com/facebookresearch/segment-anything.git
-git clone https://github.com/advimman/lama.git
+git clone --depth=1 https://github.com/facebookresearch/segment-anything.git
+git clone --depth=1 https://github.com/advimman/lama.git
 python -m pip install -e ./segment-anything
 python -m pip install -r lama_requirements.txt 
 ```
@@ -149,7 +149,7 @@ Requires `python>=3.8`
 python -m pip install -r requirements.txt 
 python -m pip install diffusers transformers accelerate scipy safetensors
 cd third_party
-git clone https://github.com/facebookresearch/segment-anything.git
+git clone --depth=1 https://github.com/facebookresearch/segment-anything.git
 pip install -e ./segment-anything
 ```
 
@@ -236,7 +236,7 @@ Requires `python>=3.8`
 python -m pip install -r requirements.txt 
 python -m pip install diffusers transformers accelerate scipy safetensors
 cd third_party
-git clone https://github.com/facebookresearch/segment-anything.git
+git clone --depth=1 https://github.com/facebookresearch/segment-anything.git
 pip install -e ./segment-anything
 ```
 
