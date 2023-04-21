@@ -1,5 +1,0 @@
-img_ext: .jpg
-
-gen_kwargs:
-  mask_size: 200
-  step: 0.5

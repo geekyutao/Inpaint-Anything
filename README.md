@@ -62,7 +62,7 @@ python -m pip install -r lama/requirements.txt
 ```
 On Windows system, we recommend to first install [miniconda](https://docs.conda.io/en/latest/miniconda.html) and 
 open `Anaconda Powershell Prompt (miniconda3)` as administrator.
-Then pip install [./lama_requirements_windows.txt](lama_requirements_windows.txt) instead of 
+Then pip install [./lama_requirements_windows.txt](requirements.txt) instead of 
 [./lama/requirements.txt](lama%2Frequirements.txt).
 
 ### Usage

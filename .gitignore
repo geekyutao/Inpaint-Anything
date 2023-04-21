@@ -12,4 +12,7 @@ __pycache__/
 ~*
 
 # pretrained_models
-pretrained_models/
+pretrained_models/*
+
+# third_party
+third_party/*

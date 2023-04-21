@@ -15,7 +15,7 @@ os.environ['MKL_NUM_THREADS'] = '1'
 os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
 os.environ['NUMEXPR_NUM_THREADS'] = '1'
 
-sys.path.insert(0, str(Path(__file__).resolve().parent / "lama"))
+sys.path.insert(0, str(Path(__file__).resolve().parent / "third_party" / "lama"))
 from saicinpainting.evaluation.utils import move_to_device
 from saicinpainting.training.trainers import load_checkpoint
 from saicinpainting.evaluation.data import pad_tensor_to_modulo
@@ -28,7 +28,7 @@ def inpaint_img_with_lama(
         img: np.ndarray,
         mask: np.ndarray,
         config_p: str,
-        ckpt_p: str="./lama/configs/prediction/default.yaml",
+        ckpt_p: str,
         mod=8,
         device="cuda"
 ):
@@ -56,7 +56,7 @@ def inpaint_img_with_lama(
         predict_config.model.checkpoint
     )
     model = load_checkpoint(
-        train_config, checkpoint_path, strict=False, map_location='cpu')
+        train_config, checkpoint_path, strict=False, map_location=device)
     model.freeze()
     if not predict_config.get('refine', False):
         model.to(device)
@@ -96,7 +96,7 @@ def setup_args(parser):
     )
     parser.add_argument(
         "--lama_config", type=str,
-        default="./lama/configs/prediction/default.yaml",
+        default="./third_party/lama/configs/prediction/default.yaml",
         help="The path to the config file of lama model. "
              "Default: the config of big-lama",
     )
