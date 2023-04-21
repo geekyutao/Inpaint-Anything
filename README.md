@@ -56,14 +56,16 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 ### Installation
 Requires `python>=3.8`
 ```bash
-python -m pip install torch torchvision torchaudio
-python -m pip install -e segment_anything
-python -m pip install -r lama/requirements.txt 
+python -m pip install -r requirements.txt 
+cd third_party
+git clone https://github.com/facebookresearch/segment-anything.git
+git clone https://github.com/advimman/lama.git
+python -m pip install -e ./segment-anything
+python -m pip install -r lama_requirements.txt 
 ```
 On Windows system, we recommend to first install [miniconda](https://docs.conda.io/en/latest/miniconda.html) and 
 open `Anaconda Powershell Prompt (miniconda3)` as administrator.
-Then pip install [./lama_requirements_windows.txt](requirements.txt) instead of 
-[./lama/requirements.txt](lama%2Frequirements.txt).
+Then pip install the corresponding packages.
 
 ### Usage
 Download the model checkpoints provided in [segment_anything](./segment_anything/README.md) 
@@ -80,11 +82,12 @@ python remove_anything.py \
     --output_dir ./results \
     --sam_model_type "vit_h" \
     --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth \
-    --lama_config ./lama/configs/prediction/default.yaml \
+    --lama_config ./third_party/lama/configs/prediction/default.yaml \
     --lama_ckpt ./pretrained_models/big-lama
 ```
 
 ### Demo
+For more examples with PNG format, please refer to [this link](https://drive.google.com/drive/folders/11SkGmE5kerjW9hE0dVzHjMWhVBijHd3c?usp=share_link).
 <table>
   <tr>
     <td><img src="./example/remove-anything/person/with_points.jpg" width="100%"></td>
@@ -143,9 +146,11 @@ python remove_anything.py \
 ### Installation
 Requires `python>=3.8`
 ```bash
-python -m pip install torch torchvision torchaudio
-python -m pip install -e segment_anything
+python -m pip install -r requirements.txt 
 python -m pip install diffusers transformers accelerate scipy safetensors
+cd third_party
+git clone https://github.com/facebookresearch/segment-anything.git
+pip install -e ./segment-anything
 ```
 
 ### Usage
@@ -167,7 +172,7 @@ python fill_anything.py \
 ```
 
 ### Demo
-
+For more examples with PNG format, please refer to [this link](https://drive.google.com/drive/folders/11SkGmE5kerjW9hE0dVzHjMWhVBijHd3c?usp=share_link).
 <table>
   <caption align="center">Text prompt: "a camera lens in the hand"</caption>
     <tr>
@@ -228,9 +233,11 @@ python fill_anything.py \
 ### Installation
 Requires `python>=3.8`
 ```bash
-python -m pip install torch torchvision torchaudio
-python -m pip install -e segment_anything
+python -m pip install -r requirements.txt 
 python -m pip install diffusers transformers accelerate scipy safetensors
+cd third_party
+git clone https://github.com/facebookresearch/segment-anything.git
+pip install -e ./segment-anything
 ```
 
 ### Usage
@@ -251,6 +258,7 @@ python replace_anything.py \
 ```
 
 ### Demo
+For more examples with PNG format, please refer to [this link](https://drive.google.com/drive/folders/11SkGmE5kerjW9hE0dVzHjMWhVBijHd3c?usp=share_link).
 <table>
   <caption align="center">Text prompt: "sit on the swing"</caption>
     <tr>
