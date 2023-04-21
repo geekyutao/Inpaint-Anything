@@ -18,3 +18,4 @@ pretrained_models/*
 # third_party
 third_party/*
 !third_party/.gitkeep
+!third_party/*.txt

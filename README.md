@@ -68,9 +68,9 @@ open `Anaconda Powershell Prompt (miniconda3)` as administrator.
 Then pip install the corresponding packages.
 
 ### Usage
-Download the model checkpoints provided in [segment_anything](./segment_anything/README.md) 
-and [lama](./lama/README.md) (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) 
-and [big-lama](https://disk.yandex.ru/d/ouP6l8VJ0HpMZg)), and put them into `./pretrained_models`.
+Download the model checkpoints provided in [segment_anything](https://github.com/facebookresearch/segment-anything) 
+and [lama](https://github.com/advimman/lama.git) (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) 
+and [big-lama](https://drive.google.com/drive/folders/133pGRF0eb08U5t7zFCJTVvKrjx9VYcgz?usp=share_link)), and put them into `./pretrained_models`.
 
 Specify an image and a point, and Inpaint-Anything will remove the object at the point.
 ```bash
@@ -154,7 +154,7 @@ pip install -e ./segment-anything
 ```
 
 ### Usage
-Download the model checkpoints provided in [segment_anything](./segment_anything/README.md)
+Download the model checkpoints provided in [segment_anything](https://github.com/facebookresearch/segment-anything)
 (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)).
 , and put them into `./pretrained_models`.
 
@@ -241,7 +241,7 @@ pip install -e ./segment-anything
 ```
 
 ### Usage
-Download the model checkpoints provided in [segment_anything](./segment_anything/README.md)
+Download the model checkpoints provided in [segment_anything](https://github.com/facebookresearch/segment-anything)
 (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth))
 , and put them into `./pretrained_models`.
 
