@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./example/IAM.png">
+  <img src="./example/IAM.jpg">
 </p>
 
 # Inpaint Anything: Segment Anything Meets Image Inpainting
@@ -7,7 +7,7 @@
 - Institutes: University of Science and Technology of China; Eastern Institute for Advanced Study.
 - Paper: [arXiv](https://arxiv.org/abs/2304.06790)
 <p align="center">
-  <img src="./example/MainFramework.png" width="100%">
+  <img src="./example/MainFramework.jpg" width="100%">
 </p>
 
 TL; DR: Users can select any object in an image by clicking on it. With powerful vision models, e.g., [SAM](https://arxiv.org/abs/2304.02643), [LaMa](https://arxiv.org/abs/2109.07161) and [Stable Diffusion (SD)](https://arxiv.org/abs/2112.10752), **Inpaint Anything** is able to remove the object smoothly (i.e., *Remove Anything*). Further, prompted by user input text, Inpaint Anything can fill the object with any desired content (i.e., *Fill Anything*) or replace the background of it arbitrarily (i.e., *Replace Anything*).
@@ -37,9 +37,9 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 
 <!-- <table>
   <tr>
-    <td><img src="./example/remove-anything/dog/with_points.png" width="100%"></td>
-    <td><img src="./example/remove-anything/dog/with_mask.png" width="100%"></td>
-    <td><img src="./example/remove-anything/dog/inpainted_with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/dog/with_points.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/dog/with_mask.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/dog/inpainted_with_mask.jpg" width="100%"></td>
   </tr>
 </table> -->
 
@@ -87,34 +87,34 @@ python remove_anything.py \
 ### Demo
 <table>
   <tr>
-    <td><img src="./example/remove-anything/person/with_points.png" width="100%"></td>
-    <td><img src="./example/remove-anything/person/with_mask.png" width="100%"></td>
-    <td><img src="./example/remove-anything/person/inpainted_with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/person/with_points.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/person/with_mask.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/person/inpainted_with_mask.jpg" width="100%"></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/bridge/with_points.png" width="100%"></td>
-    <td><img src="./example/remove-anything/bridge/with_mask.png" width="100%"></td>
-    <td><img src="./example/remove-anything/bridge/inpainted_with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/bridge/with_points.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/bridge/with_mask.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/bridge/inpainted_with_mask.jpg" width="100%"></td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/boat/with_points.png" width="100%"></td>
-    <td><img src="./example/remove-anything/boat/with_mask.png" width="100%"></td>
-    <td><img src="./example/remove-anything/boat/inpainted_with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/boat/with_points.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/boat/with_mask.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/boat/inpainted_with_mask.jpg" width="100%"></td>
   </tr>
 </table>
 
 
 <table>
   <tr>
-    <td><img src="./example/remove-anything/baseball/with_points.png" width="100%"></td>
-    <td><img src="./example/remove-anything/baseball/with_mask.png" width="100%"></td>
-    <td><img src="./example/remove-anything/baseball/inpainted_with_mask.png" width="100%"></td>
+    <td><img src="./example/remove-anything/baseball/with_points.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/baseball/with_mask.jpg" width="100%"></td>
+    <td><img src="./example/remove-anything/baseball/inpainted_with_mask.jpg" width="100%"></td>
   </tr>
 </table>
 
@@ -124,9 +124,9 @@ python remove_anything.py \
 <!-- <table>
   <caption align="center">Text prompt: "a teddy bear on a bench"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample1/with_points.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample1/with_mask.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample1/filled_with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1/with_points.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample1/filled_with_mask.jpg" width="100%"></td>
     </tr>
 </table> -->
 <p align="center">Text prompt: "a teddy bear on a bench"</p>
@@ -171,36 +171,36 @@ python fill_anything.py \
 <table>
   <caption align="center">Text prompt: "a camera lens in the hand"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample2/with_points.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample2/with_mask.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample2/filled_with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2/with_points.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample2/filled_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption align="center">Text prompt: "a Picasso painting on the wall"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample5/with_points.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample5/with_mask.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample5/filled_with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample5/with_points.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample5/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample5/filled_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption align="center">Text prompt: "an aircraft carrier on the sea"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample3/with_points.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample3/with_mask.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample3/filled_with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3/with_points.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample3/filled_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption align="center">Text prompt: "a sports car on a road"</caption>
     <tr>
-      <td><img src="./example/fill-anything/sample4/with_points.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample4/with_mask.png" width="100%"></td>
-      <td><img src="./example/fill-anything/sample4/filled_with_mask.png" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4/with_points.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/fill-anything/sample4/filled_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
@@ -209,9 +209,9 @@ python fill_anything.py \
 <!-- <table>
   <caption align="center">Text prompt: "a man in office"</caption>
     <tr>
-      <td><img src="./example/replace-anything/man/with_points.png" width="100%"></td>
-      <td><img src="./example/replace-anything/man/with_mask.png" width="100%"></td>
-      <td><img src="./example/replace-anything/man/replaced_with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/man/with_points.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/man/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/man/replaced_with_mask.jpg" width="100%"></td>
     </tr>
 </table> -->
 <p align="center">Text prompt: "a man in office"</p>
@@ -254,36 +254,36 @@ python replace_anything.py \
 <table>
   <caption align="center">Text prompt: "sit on the swing"</caption>
     <tr>
-      <td><img src="./example/replace-anything/dog/with_points.png" width="100%"></td>
-      <td><img src="./example/replace-anything/dog/with_mask.png" width="100%"></td>
-      <td><img src="./example/replace-anything/dog/replaced_with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/with_points.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/dog/replaced_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption align="center">Text prompt: "a bus, on the center of a country road, summer"</caption>
     <tr>
-      <td><img src="./example/replace-anything/bus/with_points.png" width="100%"></td>
-      <td><img src="./example/replace-anything/bus/with_mask.png" width="100%"></td>
-      <td><img src="./example/replace-anything/bus/replaced_with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/bus/with_points.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/bus/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/bus/replaced_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption align="center">Text prompt: "breakfast"</caption>
     <tr>
-      <td><img src="./example/replace-anything/000000029675/with_points.png" width="100%"></td>
-      <td><img src="./example/replace-anything/000000029675/with_mask.png" width="100%"></td>
-      <td><img src="./example/replace-anything/000000029675/replaced_with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000029675/with_points.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/000000029675/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/000000029675/replaced_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
 <table>
   <caption align="center">Text prompt: "crossroad in the city"</caption>
     <tr>
-      <td><img src="./example/replace-anything/000000000724/with_points.png" width="100%"></td>
-      <td><img src="./example/replace-anything/000000000724/with_mask.png" width="100%"></td>
-      <td><img src="./example/replace-anything/000000000724/replaced_with_mask.png" width="100%"></td>
+      <td><img src="./example/replace-anything/000000000724/with_points.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/000000000724/with_mask.jpg" width="100%"></td>
+      <td><img src="./example/replace-anything/000000000724/replaced_with_mask.jpg" width="100%"></td>
     </tr>
 </table>
 
