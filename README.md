@@ -5,24 +5,29 @@
 # Inpaint Anything: Segment Anything Meets Image Inpainting
 - Authors: Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen.
 - Institutes: University of Science and Technology of China; Eastern Institute for Advanced Study.
-- Paper: [arXiv](https://arxiv.org/abs/2304.06790)
+- [[Paper](https://arxiv.org/abs/2304.06790)] [[Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything)] [[HuggingFace Homepage](https://huggingface.co/InpaintAI)]
 <p align="center">
   <img src="./example/MainFramework.png" width="100%">
 </p>
 
 TL; DR: Users can select any object in an image by clicking on it. With powerful vision models, e.g., [SAM](https://arxiv.org/abs/2304.02643), [LaMa](https://arxiv.org/abs/2109.07161) and [Stable Diffusion (SD)](https://arxiv.org/abs/2112.10752), **Inpaint Anything** is able to remove the object smoothly (i.e., *Remove Anything*). Further, prompted by user input text, Inpaint Anything can fill the object with any desired content (i.e., *Fill Anything*) or replace the background of it arbitrarily (i.e., *Replace Anything*).
 
+## 📜 News
+[2023/4/22] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) available! You can experience Inpaint Anything through the interface!\
+[2023/4/22] **Remove Anything 3D** available! You can remove any 3D object from a 3D scene!
 
-## 🌟 Inpaint Anything Features
-- [x] **Remove** Anything
-- [x] **Fill** Anything
-- [x] **Replace** Anything
+## 🌟 Features
+- [x] [**Remove** Anything](#remove-anything)
+- [x] [**Fill** Anything](#fill-anything)
+- [x] [**Replace** Anything](#replace-anything)
+- [x] [Remove Anything **3D**](#remove-anything-3d) (<span style="color:red">🔥NEW</span>)
+
 
 ## 💡 Highlights
 - [x] Any aspect ratio supported
 - [x] 2K resolution supported
 - [x] [Technical report on arXiv](https://arxiv.org/abs/2304.06790)
-- [ ] Demo Website (coming soon)
+- [x] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) (<span style="color:red">🔥NEW</span>)
 
 
 <!-- ## Updates
@@ -32,7 +37,7 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 | 2023-04-10 | Release the Remove Anything feature |
 | 2023-04-10 | Release the first version of Inpaint Anything | -->
 
-## 🔥 Remove Anything
+## <span id="remove-anything">📌 Remove Anything</span>
 
 
 <!-- <table>
@@ -120,7 +125,7 @@ python remove_anything.py \
 
 
 
-## 🔥 Fill Anything
+## <span id="fill-anything">📌 Fill Anything</span>
 <!-- <table>
   <caption align="center">Text prompt: "a teddy bear on a bench"</caption>
     <tr>
@@ -205,7 +210,7 @@ python fill_anything.py \
 </table>
 
 
-## 🔥 Replace Anything
+## <span id="replace-anything">📌 Replace Anything</span>
 <!-- <table>
   <caption align="center">Text prompt: "a man in office"</caption>
     <tr>
@@ -287,7 +292,24 @@ python replace_anything.py \
     </tr>
 </table>
 
-<!-- ## Cite Us -->
+## <span id="remove-anything-3d">📌 Remove Anything 3D</span>
+Remove Anything 3D can remove any object from a 3D scene! We release some results below.
+
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-3d/horns/org.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-3d/horns/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-3d/horns/result.gif" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-3d/room/org.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-3d/room/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-3d/room/result.gif" width="100%"></td>
+    </tr>
+</table>
 
 
 ## Acknowledgments
@@ -302,7 +324,7 @@ python replace_anything.py \
 - [Composable AI](https://github.com/Adamdad/Awesome-ComposableAI)
 - [Grounded SAM](https://github.com/IDEA-Research/Grounded-Segment-Anything)
 
-## 📜 Citation
+## Citation
 If you find this work useful for your research, please cite us:
 ```bibtex
 @misc{yu2023inpaint,
