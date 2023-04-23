@@ -345,3 +345,9 @@ If you find this project helpful, please cite the following BibTeX entry.
   author={Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
   year={2023}
 } -->
+
+<p align="center">
+  <a href="https://star-history.com/#geekyutao/Inpaint-Anything&Date">
+    <img src="https://api.star-history.com/svg?repos=geekyutao/Inpaint-Anything&type=Date" alt="Star History Chart">
+  </a>
+</p>
