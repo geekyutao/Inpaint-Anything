@@ -326,19 +326,6 @@ Remove Anything 3D can remove any object from a 3D scene! We release some result
 
 ## Citation
 If you find this work useful for your research, please cite us:
-```bibtex
-@misc{yu2023inpaint,
-      title={Inpaint Anything: Segment Anything Meets Image Inpainting}, 
-      author={Tao Yu and Runseng Feng and Ruoyu Feng and Jinming Liu and Xin Jin and Wenjun Zeng and Zhibo Chen},
-      year={2023},
-      eprint={2304.06790},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
-}
-```
-
-## Citation
-If you find this project helpful, please cite the following BibTeX entry.
 ```
 @article{yu2023inpaint,
   title={Inpaint Anything: Segment Anything Meets Image Inpainting},
