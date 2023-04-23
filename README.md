@@ -341,9 +341,11 @@ If you find this work useful for your research, please cite us:
 If you find this project helpful, please cite the following BibTeX entry.
 ```BibTex
 @article{yu2023inpaint,
-  title={Inpaint Anything: Segment Anything Meets Image Inpainting}, 
-  author={Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen},
+  title={Inpaint Anything: Segment Anything Meets Image Inpainting},
+  author={Yu, Tao and Feng, Runseng and Feng, Ruoyu and Liu, Jinming and Jin, Xin and Zeng, Wenjun and Chen, Zhibo},
+  journal={arXiv preprint arXiv:2304.06790},
   year={2023}
+}
 } -->
 
 <p align="center">
