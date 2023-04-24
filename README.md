@@ -13,7 +13,7 @@
 TL; DR: Users can select any object in an image by clicking on it. With powerful vision models, e.g., [SAM](https://arxiv.org/abs/2304.02643), [LaMa](https://arxiv.org/abs/2109.07161) and [Stable Diffusion (SD)](https://arxiv.org/abs/2112.10752), **Inpaint Anything** is able to remove the object smoothly (i.e., *Remove Anything*). Further, prompted by user input text, Inpaint Anything can fill the object with any desired content (i.e., *Fill Anything*) or replace the background of it arbitrarily (i.e., *Replace Anything*).
 
 ## 📜 News
-[2023/4/24] [Local web UI](./app/README.md) supported! You can run the demo website locally!\
+[2023/4/24] [Local web UI](./app) supported! You can run the demo website locally!\
 [2023/4/22] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) available! You can experience Inpaint Anything through the interface!\
 [2023/4/22] [Remove Anything 3D](#remove-anything-3d) available! You can remove any 3D object from a 3D scene!
 
@@ -29,7 +29,7 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 - [x] 2K resolution supported
 - [x] [Technical report on arXiv](https://arxiv.org/abs/2304.06790)
 - [x] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) (<span style="color:red">🔥NEW</span>)
-- [x] [Local web UI](./app/README.md) supported (<span style="color:red">🔥NEW</span>)
+- [x] [Local web UI](./app) supported (<span style="color:red">🔥NEW</span>)
 
 <!-- ## Updates
 | Date | News |
