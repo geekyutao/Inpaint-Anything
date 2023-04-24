@@ -40,7 +40,7 @@ To upload an image, click on the `Input Image` component or drop your image to t
 - Click a point in the `Input Image` to set a point prompt for SAM, and the pointed image will be shown in the `Pointed Image`.
 - The example of the operation is shown below. -->
 Step 1 & 2:
-<p align="center"><img src="./assets/point_prompt.png" width = "1500" height = "400" alt="point_prompt"/></p>
+<p align="center"><img src="./assets/point_prompt.png"/></p>
 
 <!-- - Or you can set the point prompt in `Control Panel` by fill the coordinate. -->
 
@@ -50,14 +50,14 @@ Step 1 & 2:
  - The images with the segmentation masks will be shown in `Image with Mask` component automatically.
  - The example of the operation is shown below. -->
 Step 3:
-<p align="center"><img src="./assets/segmentation_mask.png" width = "1500" height = "1200" alt="segmentation_mask"/></p>
+<p align="center"><img src="./assets/segmentation_mask.png"/></p>
 
 <!-- ## 5. Inpaint Image Using LaMA
   - Click the `Inpaint Image Using LaMA` button in the `Control Panel` component to get the image inpainted by LaMA.
   - The inpainted images will be shown in the `Image Removed with Mask` component automatically.
   - The example of the operation is shown below. -->
 Step 4:
-<p align="center"><img src="./assets/image_removed.png" width = "1500" height = "1600" alt="image_removed"/></p>
+<p align="center"><img src="./assets/image_removed.png"/></p>
 
 <!-- ## 6. Reset
   - By Clicking the `Reset` button in  the `Control Panel`, you can reinitialize Inpaint Anything. -->
