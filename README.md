@@ -80,7 +80,7 @@ Specify an image and a point, and Inpaint-Anything will remove the object at the
 ```bash
 python remove_anything.py \
     --input_img ./example/remove-anything/dog.jpg \
-    --coords_type click \
+    --coords_type key_in \
     --point_coords 200 450 \
     --point_labels 1 \
     --dilate_kernel_size 15 \
@@ -90,6 +90,7 @@ python remove_anything.py \
     --lama_config ./lama/configs/prediction/default.yaml \
     --lama_ckpt ./pretrained_models/big-lama
 ```
+You can change `--coords_type key_in` to `--coords_type click` if your machine has a display device. If `click` is set, after running the above command, the image will be displayed. (1) Use *left-click* to record the coordinates of the click. It supports modifying points, and only last point coordinates are recorded. (2) Use *right-click* to finish the selection.
 
 ### Demo
 <table>
@@ -164,7 +165,7 @@ Specify an image, a point and text prompt, and run:
 ```bash
 python fill_anything.py \
     --input_img ./example/fill-anything/sample1.png \
-    --coords_type click \
+    --coords_type key_in \
     --point_coords 750 500 \
     --point_labels 1 \
     --text_prompt "a teddy bear on a bench" \
@@ -250,7 +251,7 @@ Specify an image, a point and text prompt, and run:
 ```bash
 python replace_anything.py \
     --input_img ./example/replace-anything/dog.png \
-    --coords_type click \
+    --coords_type key_in \
     --point_coords 750 500 \
     --point_labels 1 \
     --text_prompt "sit on the swing" \

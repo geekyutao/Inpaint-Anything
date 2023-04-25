@@ -20,7 +20,7 @@ def setup_args(parser):
     )
     parser.add_argument(
         "--coords_type", type=str, required=True,
-        default="click", choices=["click", "key_in"], 
+        default="key_in", choices=["click", "key_in"], 
         help="The way to select coords",
     )
     parser.add_argument(
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     """Example usage:
     python fill_anything.py \
         --input_img FA_demo/FA1_dog.png \
-        --coords_type click \
+        --coords_type key_in \
         --point_coords 750 500 \
         --point_labels 1 \
         --text_prompt "a teddy bear on a bench" \
@@ -81,14 +81,14 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     if args.coords_type == "click":
-        my_coords = get_clicked_point(args.input_img)
+        latest_coords = get_clicked_point(args.input_img)
     elif args.coords_type == "key_in":
-        my_coords = args.point_coords
+        latest_coords = args.point_coords
     img = load_img_to_array(args.input_img)
 
     masks, _, _ = predict_masks_with_sam(
         img,
-        [my_coords],
+        [latest_coords],
         args.point_labels,
         model_type=args.sam_model_type,
         ckpt_p=args.sam_ckpt,
@@ -119,7 +119,7 @@ if __name__ == "__main__":
         plt.figure(figsize=(width/dpi/0.77, height/dpi/0.77))
         plt.imshow(img)
         plt.axis('off')
-        show_points(plt.gca(), [my_coords], args.point_labels,
+        show_points(plt.gca(), [latest_coords], args.point_labels,
                     size=(width*0.04)**2)
         plt.savefig(img_points_p, bbox_inches='tight', pad_inches=0)
         show_mask(plt.gca(), mask, random_color=False)
