@@ -5,7 +5,7 @@
 # Inpaint Anything: Segment Anything Meets Image Inpainting
 - Authors: Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen.
 - Institutes: University of Science and Technology of China; Eastern Institute for Advanced Study.
-- [[Paper](https://arxiv.org/abs/2304.06790)] [[Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything)] [[HuggingFace Homepage](https://huggingface.co/InpaintAI)]
+- [[Paper](https://arxiv.org/abs/2304.06790)] [[Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything)] [[Hugging Face Homepage](https://huggingface.co/InpaintAI)]
 <p align="center">
   <img src="./example/MainFramework.png" width="100%">
 </p>
