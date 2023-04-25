@@ -43,13 +43,13 @@ class Tracker:
         self.run_id = run_id
         self.display_name = display_name
 
-        env = env_settings()
-        if self.run_id is None:
-            self.results_dir = '{}/{}/{}'.format(env.results_path, self.name, self.parameter_name)
-        else:
-            self.results_dir = '{}/{}/{}_{:03d}'.format(env.results_path, self.name, self.parameter_name, self.run_id)
-        if result_only:
-            self.results_dir = '{}/{}'.format(env.results_path, self.name)
+        # env = env_settings()
+        # if self.run_id is None:
+        #     self.results_dir = '{}/{}/{}'.format(env.results_path, self.name, self.parameter_name)
+        # else:
+        #     self.results_dir = '{}/{}/{}_{:03d}'.format(env.results_path, self.name, self.parameter_name, self.run_id)
+        # if result_only:
+        #     self.results_dir = '{}/{}'.format(env.results_path, self.name)
 
         tracker_module_abspath = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                               '..', 'tracker', '%s.py' % self.name))
@@ -134,7 +134,7 @@ class Tracker:
             init_default['all_scores'] = out['all_scores']
 
         _store_outputs(out, init_default)
-
+        inpainted_frames = []
         for frame_num, frame_path in enumerate(seq.frames[1:], start=1):
             image = self._read_image(frame_path)
 
@@ -147,12 +147,10 @@ class Tracker:
                 info['gt_bbox'] = seq.ground_truth_rect[frame_num]
             out = tracker.track(image, info)
             # perform frame-wise inpaint 
-            import pdb 
-            pdb.set_trace()
-            # bbox in (x1, y1, w, h) format
-            prompt_box = out['target_bbox']
             if inpaint_func is not None:
-                inpainted_image = inpaint_func(image)
+                 prompt_box = out['target_bbox']
+                 inpainted = inpaint_func(image)
+                 inpainted_frames.append(inpainted)
             prev_output = OrderedDict(out)
             _store_outputs(out, {'time': time.time() - start_time})
 
@@ -160,7 +158,7 @@ class Tracker:
             if key in output and len(output[key]) <= 1:
                 output.pop(key)
 
-        return output
+        return output, inpainted_frames
 
     def _track_sequence(self, tracker, seq, init_info):
         # Define outputs

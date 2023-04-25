@@ -8,6 +8,7 @@ import sys
 from itertools import product
 from collections import OrderedDict
 from lib.test.evaluation import Sequence, Tracker
+from lib.utils.video_utils import frames2video
 import torch
 
 
@@ -187,20 +188,22 @@ def run_dataset(dataset, trackers, debug=False, threads=0, num_gpus=8):
     print('Done, total time: {}'.format(str(timedelta(seconds=(time.time() - dataset_start_time)))))
 
 
-def video_inpaint(seq: Sequence, tracker: Tracker):
+def video_inpaint(seq: Sequence, tracker: Tracker, inpaint_func=None):
     print('Tracker: {} {} {} ,  Sequence: {}'.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name))
 
-    output = tracker.run_video_inpaint(seq, debug=False)
+    output, inpainted_frames = tracker.run_video_inpaint(seq, debug=False, inpaint_func=inpaint_func)
 
     sys.stdout.flush()
 
-    if isinstance(output['time'][0], (dict, OrderedDict)):
-        exec_time = sum([sum(times.values()) for times in output['time']])
-        num_frames = len(output['time'])
-    else:
-        exec_time = sum(output['time'])
-        num_frames = len(output['time'])
+    return inpainted_frames
 
-    print('FPS: {}'.format(num_frames / exec_time))
+    # if isinstance(output['time'][0], (dict, OrderedDict)):
+    #     exec_time = sum([sum(times.values()) for times in output['time']])
+    #     num_frames = len(output['time'])
+    # else:
+    #     exec_time = sum(output['time'])
+    #     num_frames = len(output['time'])
 
-    _save_tracker_output(seq, tracker, output)
+    # print('FPS: {}'.format(num_frames / exec_time))
+
+    # _save_tracker_output(seq, tracker, output)

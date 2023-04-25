@@ -8,8 +8,7 @@ from os import path as osp
 
 def video2frames(video_path, frame_path):
     video = cv2.VideoCapture(video_path)
-    if not osp.exists(frame_path):
-        os.mkdir(frame_path)
+    os.makedirs(frame_path, exist_ok=True)
     frame_num = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
     fps = video.get(cv2.CAP_PROP_FPS)
     initial_img = None
@@ -20,18 +19,23 @@ def video2frames(video_path, frame_path):
         cv2.imwrite("{}/{:05d}.jpg".format(frame_path, idx), image)
     return fps, initial_img
 
-def frames2video(frame_path, video_path, fps=30, remove_tmp=False):
-    frames_list = glob(f'{frame_path}/*.jpg')
+def frames2video(frames_list, video_path, fps=30, remove_tmp=False):
+    # frames_list: frames dir or list of images.
+    if isinstance(frames_list, str):
+        frames_list = glob(f'{frames_list}/*.jpg')
     writer = imageio.get_writer(video_path, fps=fps)
     for frame in tqdm(frames_list, 'Export video'):
-        image = imageio.imread(frame)
-        writer.append_data(image)
+        if isinstance(frame, 'str'):
+            frame = imageio.imread(frame)
+        else:
+            # convert cv2 (rgb) to PIL
+            frame = imageio.core.util.Array(frame)
+        writer.append_data(frame)
     writer.close()
     print(f'find video at {video_path}.')
-    if remove_tmp:
-        shutil.rmtree(frame_path)
+    if remove_tmp and isinstance(frames_list, str):
+        shutil.rmtree(frames_list)
 
 if __name__ == '__main__':
-    # fps = video2frames('./unitest/example.mp4', './unitest/frames/')
-    fps = 25.0
+    fps = video2frames('./unitest/example.mp4', './unitest/frames/')
     frames2video('./unitest/frames/', './unitest/new.mp4', fps, True)

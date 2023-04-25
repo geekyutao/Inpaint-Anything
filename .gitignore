@@ -13,3 +13,5 @@ __pycache__/
 
 # pretrained_models
 pretrained_models/
+
+*.mp4
