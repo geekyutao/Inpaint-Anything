@@ -3,7 +3,6 @@ from lib.test.evaluation.data import Sequence, BaseDataset, SequenceList
 from lib.test.utils.load_text import load_text
 import os
 
-
 class GOT10KDataset(BaseDataset):
     """ GOT-10k dataset.
 

@@ -12,13 +12,15 @@ def video2frames(video_path, frame_path):
         os.mkdir(frame_path)
     frame_num = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
     fps = video.get(cv2.CAP_PROP_FPS)
+    initial_img = None
     for idx in tqdm(range(frame_num), 'Extract frames'):
         success, image = video.read()
+        if idx == 0: initial_img = image.copy()
         assert success, 'extract the {}th frame in video {} failed!'.format(idx, video_path)
         cv2.imwrite("{}/{:05d}.jpg".format(frame_path, idx), image)
-    return fps 
+    return fps, initial_img
 
-def framesvideo(frame_path, video_path, fps=30, remove_tmp=False):
+def frames2video(frame_path, video_path, fps=30, remove_tmp=False):
     frames_list = glob(f'{frame_path}/*.jpg')
     writer = imageio.get_writer(video_path, fps=fps)
     for frame in tqdm(frames_list, 'Export video'):
@@ -32,4 +34,4 @@ def framesvideo(frame_path, video_path, fps=30, remove_tmp=False):
 if __name__ == '__main__':
     # fps = video2frames('./unitest/example.mp4', './unitest/frames/')
     fps = 25.0
-    framesvideo('./unitest/frames/', './unitest/new.mp4', fps, True)
+    frames2video('./unitest/frames/', './unitest/new.mp4', fps, True)

@@ -86,6 +86,81 @@ class Tracker:
 
         output = self._track_sequence(tracker, seq, init_info)
         return output
+    
+    def run_video_inpaint(self, seq, inpaint_func=None, debug=None):
+        params = self.get_parameters()
+
+        debug_ = debug
+        if debug is None:
+            debug_ = getattr(params, 'debug', 0)
+
+        params.debug = debug_
+
+        # Get init information
+        init_info = seq.init_info()
+
+        tracker = self.create_tracker(params)
+
+        output = self._track_and_inpaint(tracker, seq, init_info, inpaint_func)
+        return output
+
+    def _track_and_inpaint(self, tracker, seq, init_info, inpaint_func):
+        output = {'target_bbox': [],
+                  'time': []}
+        if tracker.params.save_all_boxes:
+            output['all_boxes'] = []
+            output['all_scores'] = []
+
+        def _store_outputs(tracker_out: dict, defaults=None):
+            defaults = {} if defaults is None else defaults
+            for key in output.keys():
+                val = tracker_out.get(key, defaults.get(key, None))
+                if key in tracker_out or val is not None:
+                    output[key].append(val)
+
+        # Initialize
+        image = self._read_image(seq.frames[0])
+
+        start_time = time.time()
+        out = tracker.initialize(image, init_info)
+        if out is None:
+            out = {}
+
+        prev_output = OrderedDict(out)
+        init_default = {'target_bbox': init_info.get('init_bbox'),
+                        'time': time.time() - start_time}
+        if tracker.params.save_all_boxes:
+            init_default['all_boxes'] = out['all_boxes']
+            init_default['all_scores'] = out['all_scores']
+
+        _store_outputs(out, init_default)
+
+        for frame_num, frame_path in enumerate(seq.frames[1:], start=1):
+            image = self._read_image(frame_path)
+
+            start_time = time.time()
+
+            info = seq.frame_info(frame_num)
+            info['previous_output'] = prev_output
+
+            if len(seq.ground_truth_rect) > 1:
+                info['gt_bbox'] = seq.ground_truth_rect[frame_num]
+            out = tracker.track(image, info)
+            # perform frame-wise inpaint 
+            import pdb 
+            pdb.set_trace()
+            # bbox in (x1, y1, w, h) format
+            prompt_box = out['target_bbox']
+            if inpaint_func is not None:
+                inpainted_image = inpaint_func(image)
+            prev_output = OrderedDict(out)
+            _store_outputs(out, {'time': time.time() - start_time})
+
+        for key in ['target_bbox', 'all_boxes', 'all_scores']:
+            if key in output and len(output[key]) <= 1:
+                output.pop(key)
+
+        return output
 
     def _track_sequence(self, tracker, seq, init_info):
         # Define outputs
