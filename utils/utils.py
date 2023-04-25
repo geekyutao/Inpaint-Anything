@@ -54,3 +54,32 @@ def show_points(ax, coords: List[List[float]], labels: List[int], size=375):
         points = coords[labels == label_value]
         ax.scatter(points[:, 0], points[:, 1], color=color, marker='*',
                    s=size, edgecolor='white', linewidth=1.25)
+
+def get_clicked_point(img_path):
+    img = cv2.imread(img_path)
+    cv2.namedWindow("image")
+    cv2.imshow("image", img)
+
+    last_point = []
+    keep_looping = True
+
+    def mouse_callback(event, x, y, flags, param):
+        nonlocal last_point, keep_looping, img
+
+        if event == cv2.EVENT_LBUTTONDOWN:
+            if last_point:
+                cv2.circle(img, tuple(last_point), 5, (0, 0, 0), -1)
+            last_point = [x, y]
+            cv2.circle(img, tuple(last_point), 5, (0, 0, 255), -1)
+            cv2.imshow("image", img)
+        elif event == cv2.EVENT_RBUTTONDOWN:
+            keep_looping = False
+
+    cv2.setMouseCallback("image", mouse_callback)
+
+    while keep_looping:
+        cv2.waitKey(1)
+
+    cv2.destroyAllWindows()
+
+    return last_point
