@@ -5,7 +5,10 @@ from typing import Any, Dict, List
 
 
 def load_img_to_array(img_p):
-    return np.array(Image.open(img_p))
+    img = Image.open(img_p)
+    if img.mode == "RGBA":
+        img = img.convert("RGB")
+    return np.array(img)
 
 
 def save_array_to_img(img_arr, img_p):
