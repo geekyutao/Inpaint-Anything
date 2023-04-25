@@ -80,6 +80,7 @@ Specify an image and a point, and Inpaint-Anything will remove the object at the
 ```bash
 python remove_anything.py \
     --input_img ./example/remove-anything/dog.jpg \
+    --coords_type click \
     --point_coords 200 450 \
     --point_labels 1 \
     --dilate_kernel_size 15 \
@@ -163,6 +164,7 @@ Specify an image, a point and text prompt, and run:
 ```bash
 python fill_anything.py \
     --input_img ./example/fill-anything/sample1.png \
+    --coords_type click \
     --point_coords 750 500 \
     --point_labels 1 \
     --text_prompt "a teddy bear on a bench" \
@@ -248,6 +250,7 @@ Specify an image, a point and text prompt, and run:
 ```bash
 python replace_anything.py \
     --input_img ./example/replace-anything/dog.png \
+    --coords_type click \
     --point_coords 750 500 \
     --point_labels 1 \
     --text_prompt "sit on the swing" \
