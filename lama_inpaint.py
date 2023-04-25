@@ -28,7 +28,7 @@ def inpaint_img_with_lama(
         img: np.ndarray,
         mask: np.ndarray,
         config_p: str,
-        ckpt_p: str="./lama/configs/prediction/default.yaml",
+        ckpt_p: str,
         mod=8,
         device="cuda"
 ):
