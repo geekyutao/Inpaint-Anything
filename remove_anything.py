@@ -17,14 +17,6 @@ def setup_args(parser):
         help="Path to a single input img",
     )
     parser.add_argument(
-<<<<<<< HEAD
-=======
-        "--coords_type", type=str, required=True,
-        default="click", choices=["click", "key_in"], 
-        help="The way to select coords",
-    )
-    parser.add_argument(
->>>>>>> 51cefde (update the ways to select coords)
         "--point_coords", type=float, nargs='+', required=True,
         help="The coordinate of the point prompt, [coord_W coord_H].",
     )
@@ -78,15 +70,6 @@ if __name__ == "__main__":
     setup_args(parser)
     args = parser.parse_args(sys.argv[1:])
     device = "cuda" if torch.cuda.is_available() else "cpu"
-<<<<<<< HEAD
-
-=======
-   
-    if args.coords_type == "click":
-        my_coords = get_clicked_point(args.input_img)
-    elif args.coords_type == "key_in":
-        my_coords = args.point_coords
->>>>>>> 51cefde (update the ways to select coords)
     img = load_img_to_array(args.input_img)
 
     masks, _, _ = predict_masks_with_sam(
