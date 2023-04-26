@@ -89,7 +89,6 @@ def build_lama_model(
 ):
     predict_config = OmegaConf.load(config_p)
     predict_config.model.path = ckpt_p
-    # device = torch.device(predict_config.device)
     device = torch.device(device)
 
     train_config_path = os.path.join(
@@ -105,12 +104,9 @@ def build_lama_model(
         predict_config.model.path, 'models',
         predict_config.model.checkpoint
     )
-    model = load_checkpoint(
-        train_config, checkpoint_path, strict=False, map_location=device)
+    model = load_checkpoint(train_config, checkpoint_path, strict=False)
+    model.to(device)
     model.freeze()
-    if not predict_config.get('refine', False):
-        model.to(device)
-
     return model
 
 

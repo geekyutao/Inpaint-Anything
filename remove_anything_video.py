@@ -1,22 +1,15 @@
 import torch
 import numpy as np
 import cv2
+import glob
 import torch.nn as nn
 from typing import Any, Dict, List
 from segment_anything import SamPredictor, sam_model_registry
 from sam_segment import build_sam_model
 from lama_inpaint import build_lama_model, inpaint_img_with_builded_lama
 from tracking_lib.test.evaluation.video2seq import video2seq
+from utils import load_img_to_array, save_array_to_img
 
-# video_seq, fps = video2seq(
-#     '/data1/yutao/projects/Inpaint-Anything/example/remove-anything-video/ikun.mp4',
-#     [290, 341],
-#     [1],
-#     "vit_h",
-#     '/data1/yutao/projects/IAM/pretrained_models/sam_vit_h_4b8939.pth',
-#     './results'
-# )
-#
 
 class RemoveAnythingVideo(nn.Module):
     def __init__(
@@ -43,11 +36,12 @@ class RemoveAnythingVideo(nn.Module):
         self.inpainter = self.build_inpainter(
             inpainter_target, **inpainter_build_args)
 
+
     def build_tracker(self, target, **kwargs):
         raise NotImplementedError
 
     def build_segmentor(self, target="sam", **kwargs):
-        assert target == "lama", "Only support sam now."
+        assert target == "sam", "Only support sam now."
         return build_sam_model(**kwargs)
 
     def build_inpainter(self, target="lama", **kwargs):
@@ -62,15 +56,15 @@ class RemoveAnythingVideo(nn.Module):
                           return_logits=False):
         self.segmentor.set_image(img)
         masks, scores, logits = self.segmentor.predict(
-            point_coords=point_coords,
-            point_labels=point_labels,
+            point_coords=np.array(point_coords),
+            point_labels=np.array(point_labels),
             box=box,
             mask_input=mask_input,
             multimask_output=multimask_output,
             return_logits=return_logits
         )
         self.segmentor.reset_image()
-        return masks
+        return masks, scores
 
     def forward_inpainter(self, img, mask):
         return inpaint_img_with_builded_lama(
@@ -80,11 +74,16 @@ class RemoveAnythingVideo(nn.Module):
     def device(self):
         return "cuda" if torch.cuda.is_available() else "cpu"
 
-    def mask_selection(self, masks, interactive=False):
+    @staticmethod
+    def mask_selection(masks, scores, ref_mask=None, interactive=False):
         if interactive:
             raise NotImplementedError
         else:
-            return masks[0]
+            if ref_mask is not None:
+                idx = (masks - ref_mask).abs().sum(-1).sum(-1).argmin()
+            else:
+                idx = scores.argmax()
+            return masks[idx]
 
     @staticmethod
     def get_box_from_mask(mask):
@@ -93,19 +92,45 @@ class RemoveAnythingVideo(nn.Module):
 
     def forward(
             self,
-            frames,
+            all_frame,
             key_frame_idx,
             key_frame_point_coords,
-            key_frame_point_labels
+            key_frame_point_labels,
     ):
-        key_frame = frames[key_frame_idx]
-        masks = self.forward_segmentor(
+        # get key-frame mask
+        assert key_frame_idx == 0, "Only support key frame at the beginning."
+        key_frame = all_frame[key_frame_idx]
+        key_masks, key_scores = self.forward_segmentor(
             key_frame, key_frame_point_coords, key_frame_point_labels)
-        mask = self.mask_selection(masks, interactive=False)
-        # return self.forward_inpainter(img, masks)
-        box = self.get_box_from_mask(mask)
+        key_mask = self.mask_selection(key_masks, key_scores)
+        key_mask = (key_mask * 255).astype(np.uint8)
+
+        # get key-frame box
+        key_box = self.get_box_from_mask(key_mask)
+
+        # get all-frame boxes using video tracker
+        all_box = self.forward_tracker(all_frame, key_box)
+
+        # get all-frame masks using sam
+        all_mask = []
+        ref_mask = key_mask
+        for frame, box in zip(all_frame, all_box):
+            masks, scores = self.forward_segmentor(frame, box=box)
+            mask = self.mask_selection(masks, scores, ref_mask)
+            ref_mask = mask
+            all_mask.append(mask)
+
+        # get all-frame inpainted results
+        all_frame = self.inpainter(all_frame, all_mask)
+        return all_frame, all_mask
+
+
+if __name__ == "__main__":
+    frame_ps = sorted(glob.glob(
+        "/data1/yutao/projects/Inpaint-Anything/results/original_frames/*"))
+    frames = [load_img_to_array(p) for p in frame_ps]
+    model = RemoveAnythingVideo()
+    model(frames, 0, [[300, 300]], [1])
 
 
 
-
-print(video_seq.ground_truth_rect, fps)
