@@ -1,4 +1,4 @@
-from lib.utils import TensorList
+from pytracking.lib.utils import TensorList
 import random
 
 
