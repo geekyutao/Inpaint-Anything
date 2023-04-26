@@ -64,6 +64,7 @@ def get_masked_img(img, w, h, features, orig_h, orig_w, input_h, input_w):
     model['sam'].input_w = input_w
 
     # model['sam'].set_image(img) # todo : update here for accelerating
+    print(point_coords)
     masks, _, _ = model['sam'].predict(
         point_coords=np.array([point_coords]),
         point_labels=np.array(point_labels),
