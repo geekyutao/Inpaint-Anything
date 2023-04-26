@@ -7,12 +7,6 @@ from tracking_lib.test.evaluation.data import Sequence
 from tracking_lib.utils.video_utils import video2frames
 from sam_segment import predict_masks_with_sam
 
-
-
-
-
-
-
 def video2seq(video_path, point_coords, point_labels, sam_model_type, sam_ckpt, output_dir):
     video_name = output_dir
     frames_path = f'./{video_name}/original_frames'

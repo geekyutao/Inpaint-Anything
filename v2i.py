@@ -108,4 +108,4 @@ class RemoveAnythingVideo(nn.Module):
 
 
 
-print(video_seq, fps)
+print(video_seq.ground_truth_rect, fps)
