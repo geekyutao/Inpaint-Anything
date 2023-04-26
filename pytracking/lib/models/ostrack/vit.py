@@ -32,8 +32,8 @@ from timm.models.helpers import build_model_with_cfg, named_apply, adapt_input_c
 from timm.models.layers import Mlp, DropPath, trunc_normal_, lecun_normal_
 from timm.models.registry import register_model
 
-from lib.models.layers.patch_embed import PatchEmbed
-from lib.models.ostrack.base_backbone import BaseBackbone
+from pytracking.lib.models.layers.patch_embed import PatchEmbed
+from pytracking.lib.models.ostrack.base_backbone import BaseBackbone
 
 
 class Attention(nn.Module):
