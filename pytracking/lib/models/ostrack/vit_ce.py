@@ -10,10 +10,10 @@ import torch.nn.functional as F
 
 from timm.models.layers import to_2tuple
 
-from lib.models.layers.patch_embed import PatchEmbed
-from .utils import combine_tokens, recover_tokens
-from .vit import VisionTransformer
-from ..layers.attn_blocks import CEBlock
+from pytracking.lib.models.layers.patch_embed import PatchEmbed
+from pytracking.lib.models.ostrack.utils import combine_tokens, recover_tokens
+from pytracking.lib.models.ostrack.vit import VisionTransformer
+from pytracking.lib.models.layers.attn_blocks import CEBlock
 
 _logger = logging.getLogger(__name__)
 

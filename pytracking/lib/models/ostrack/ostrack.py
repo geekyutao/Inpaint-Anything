@@ -9,10 +9,10 @@ import torch
 from torch import nn
 from torch.nn.modules.transformer import _get_clones
 
-from lib.models.layers.head import build_box_head
-from lib.models.ostrack.vit import vit_base_patch16_224
-from lib.models.ostrack.vit_ce import vit_large_patch16_224_ce, vit_base_patch16_224_ce
-from lib.utils.box_ops import box_xyxy_to_cxcywh
+from pytracking.lib.models.layers.head import build_box_head
+from pytracking.lib.models.ostrack.vit import vit_base_patch16_224
+from pytracking.lib.models.ostrack.vit_ce import vit_large_patch16_224_ce, vit_base_patch16_224_ce
+from pytracking.lib.utils.box_ops import box_xyxy_to_cxcywh
 
 
 class OSTrack(nn.Module):

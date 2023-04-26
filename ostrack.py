@@ -48,12 +48,12 @@ if __name__ == '__main__':
     np.savetxt(trajectory_file, tracked_bb, delimiter='\t', fmt='%d')
 
     # # vis frames
-    # frames_list = vis_traj(seq, output['target_bbox'])
-    # vis_dir = osp.join(output_dir, seq.name, 'vis_bboxes')
-    # if not osp.exists(vis_dir):
-    #     os.mkdir(vis_dir)
-    # for idx, frame in enumerate(frames_list):
-    #     cv2.imwrite(osp.join(vis_dir, '{:05d}.jpg'.format(idx)), frame)
+    frames_list = vis_traj(seq, output['target_bbox'])
+    vis_dir = osp.join(output_dir, seq.name, 'vis_bboxes')
+    if not osp.exists(vis_dir):
+        os.mkdir(vis_dir)
+    for idx, frame in enumerate(frames_list):
+        cv2.imwrite(osp.join(vis_dir, '{:05d}.jpg'.format(idx)), frame)
 
 # def video_inpaint(seq: Sequence, tracker: Tracker, inpaint_func=None):
 #     print('Tracker: {} {} {} ,  Sequence: {}'.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name))

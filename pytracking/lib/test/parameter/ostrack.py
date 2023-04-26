@@ -1,6 +1,5 @@
 import os
 from pytracking.lib.test.utils import TrackerParams
-from pytracking.lib.test.evaluation.environment import env_settings
 from pytracking.lib.config.ostrack.config import cfg, update_config_from_file
 
 
@@ -13,7 +12,7 @@ def parameters(yaml_name: str):
     yaml_file = os.path.join(prj_dir, 'experiments/ostrack/%s.yaml' % yaml_name)
     update_config_from_file(yaml_file)
     params.cfg = cfg
-    print("test config: ", cfg)
+    # print("test config: ", cfg)
 
     # template and search region
     params.template_factor = cfg.TEST.TEMPLATE_FACTOR

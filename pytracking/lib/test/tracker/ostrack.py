@@ -1,19 +1,19 @@
 import math
 
-from lib.models.ostrack import build_ostrack
-from lib.test.tracker.basetracker import BaseTracker
+from pytracking.lib.models.ostrack import build_ostrack
+from pytracking.lib.test.tracker.basetracker import BaseTracker
 import torch
 
-from lib.test.tracker.vis_utils import gen_visualization
-from lib.test.utils.hann import hann2d
-from lib.train.data.processing_utils import sample_target
+from pytracking.lib.test.tracker.vis_utils import gen_visualization
+from pytracking.lib.test.utils.hann import hann2d
+from pytracking.lib.train.data.processing_utils import sample_target
 # for debug
 import cv2
 import os
 
-from lib.test.tracker.data_utils import Preprocessor
-from lib.utils.box_ops import clip_box
-from lib.utils.ce_utils import generate_mask_cond
+from pytracking.lib.test.tracker.data_utils import Preprocessor
+from pytracking.lib.utils.box_ops import clip_box
+from pytracking.lib.utils.ce_utils import generate_mask_cond
 
 
 class OSTrack(BaseTracker):
