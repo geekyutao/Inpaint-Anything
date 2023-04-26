@@ -9,4 +9,4 @@ video_seq, fps = video2seq(
     '/data1/yutao/projects/IAM/pretrained_models/sam_vit_h_4b8939.pth', 
     './results')
 
-print(video_seq, fps)
+print(video_seq.ground_truth_rect, fps)
