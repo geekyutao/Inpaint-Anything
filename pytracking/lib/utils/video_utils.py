@@ -25,10 +25,11 @@ def frames2video(frames_list, video_path, fps=30, remove_tmp=False):
         frames_list = glob(f'{frames_list}/*.jpg')
     writer = imageio.get_writer(video_path, fps=fps)
     for frame in tqdm(frames_list, 'Export video'):
-        if isinstance(frame, 'str'):
+        if isinstance(frame, str):
             frame = imageio.imread(frame)
         else:
             # convert cv2 (rgb) to PIL
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = imageio.core.util.Array(frame)
         writer.append_data(frame)
     writer.close()
