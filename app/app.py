@@ -51,10 +51,9 @@ def get_sam_feat(img):
     return features, orig_h, orig_w, input_h, input_w
 
  
-def get_masked_img(img, w, h, features, orig_h, orig_w, input_h, input_w):
+def get_masked_img(img, w, h, features, orig_h, orig_w, input_h, input_w, dilate_kernel_size):
     point_coords = [w, h]
     point_labels = [1]
-    dilate_kernel_size = 15
 
     model['sam'].is_image_set = True
     model['sam'].features = features
@@ -131,7 +130,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model['lama'] = build_lama_model(lama_config, lama_ckpt, device=device)
 
 button_size = (100,50)
-with gr.Blocks(theme='shivi/calm_seafoam') as demo:
+with gr.Blocks() as demo:
     features = gr.State(None)
     orig_h = gr.State(None)
     orig_w = gr.State(None)
@@ -155,10 +154,10 @@ with gr.Blocks(theme='shivi/calm_seafoam') as demo:
             with gr.Row():
                 w = gr.Number(label="Point Coordinate W")
                 h = gr.Number(label="Point Coordinate H")
-            sam_mask = gr.Button("Predict Mask Using SAM", variant="primary").style(full_width=True, size="sm")
-            lama = gr.Button("Inpaint Image Using LaMA", variant="primary").style(full_width=True, size="sm")
-            clear_button_image = gr.Button(value="Reset", label="Reset", icon="reset", variant="secondary").style(full_width=True, size="sm")
-
+            dilate_kernel_size = gr.Slider(label="Dilate Kernel Size", minimum=0, maximum=100, step=1, value=15)
+            sam_mask = gr.Button("Predict Mask", variant="primary").style(full_width=True, size="sm")
+            lama = gr.Button("Inpaint Image", variant="primary").style(full_width=True, size="sm")
+            clear_button_image = gr.Button(value="Reset", label="Reset", variant="secondary").style(full_width=True, size="sm")
 
     # todo: maybe we can delete this row, for it's unnecessary to show the original mask for customers
     with gr.Row(variant="panel"):
@@ -208,7 +207,7 @@ with gr.Blocks(theme='shivi/calm_seafoam') as demo:
 
     sam_mask.click(
         get_masked_img,
-        [img, w, h, features, orig_h, orig_w, input_h, input_w],
+        [img, w, h, features, orig_h, orig_w, input_h, input_w, dilate_kernel_size],
         [img_with_mask_0, img_with_mask_1, img_with_mask_2, mask_0, mask_1, mask_2]
     )
 
