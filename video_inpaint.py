@@ -183,7 +183,8 @@ def main_worker():
     print('Saving videos...')
     save_dir_name = 'results'
     ext_name = '_results.mp4'
-    save_base_name = args.video.split('/')[-1]
+    # save_base_name = args.video.split('/')[-1]
+    save_base_name = args.video.split('/')[-2]
     save_name = save_base_name.replace(
         '.mp4', ext_name) if args.use_mp4 else save_base_name + ext_name
     if not os.path.exists(save_dir_name):
