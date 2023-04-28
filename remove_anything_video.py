@@ -290,4 +290,3 @@ if __name__ == "__main__":
     imageio.mimwrite(video_w_mask_p, all_frame_w_mask, fps=25, quality=10)
 
 
-
