@@ -250,4 +250,3 @@ if __name__ == "__main__":
         save_array_to_img(mask, mask_frame_dir / img_name)
 
 
-
