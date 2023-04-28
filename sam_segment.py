@@ -34,6 +34,14 @@ def predict_masks_with_sam(
     return masks, scores, logits
 
 
+def build_sam_model(model_type: str, ckpt_p: str, device="cuda"):
+    sam = sam_model_registry[model_type](checkpoint=ckpt_p)
+    sam.to(device=device)
+    predictor = SamPredictor(sam)
+    return predictor
+
+
+
 def setup_args(parser):
     parser.add_argument(
         "--input_img", type=str, required=True,

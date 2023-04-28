@@ -89,7 +89,6 @@ def build_lama_model(
 ):
     predict_config = OmegaConf.load(config_p)
     predict_config.model.path = ckpt_p
-    # device = torch.device(predict_config.device)
     device = torch.device(device)
 
     train_config_path = os.path.join(
@@ -105,12 +104,9 @@ def build_lama_model(
         predict_config.model.path, 'models',
         predict_config.model.checkpoint
     )
-    model = load_checkpoint(
-        train_config, checkpoint_path, strict=False, map_location=device)
+    model = load_checkpoint(train_config, checkpoint_path, strict=False)
+    model.to(device)
     model.freeze()
-    if not predict_config.get('refine', False):
-        model.to(device)
-
     return model
 
 
@@ -119,7 +115,7 @@ def inpaint_img_with_builded_lama(
         model,
         img: np.ndarray,
         mask: np.ndarray,
-        config_p: str,
+        config_p=None,
         mod=8,
         device="cuda"
 ):
@@ -128,7 +124,6 @@ def inpaint_img_with_builded_lama(
         mask = mask * 255
     img = torch.from_numpy(img).float().div(255.)
     mask = torch.from_numpy(mask).float()
-    predict_config = OmegaConf.load(config_p)
 
     batch = {}
     batch['image'] = img.permute(2, 0, 1).unsqueeze(0)
@@ -140,7 +135,7 @@ def inpaint_img_with_builded_lama(
     batch['mask'] = (batch['mask'] > 0) * 1
 
     batch = model(batch)
-    cur_res = batch[predict_config.out_key][0].permute(1, 2, 0)
+    cur_res = batch["inpainted"][0].permute(1, 2, 0)
     cur_res = cur_res.detach().cpu().numpy()
 
     if unpad_to_size is not None:

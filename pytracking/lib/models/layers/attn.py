@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from timm.models.layers import trunc_normal_
 
-from lib.models.layers.rpe import generate_2d_concatenated_self_attention_relative_positional_encoding_index
+from pytracking.lib.models.layers.rpe import generate_2d_concatenated_self_attention_relative_positional_encoding_index
 
 
 class Attention(nn.Module):
