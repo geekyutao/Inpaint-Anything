@@ -7,12 +7,17 @@ import glob
 import torch.nn as nn
 from typing import Any, Dict, List
 from pathlib import Path
+import os
+import tempfile
+import imageio
+import matplotlib.pyplot as plt
 from segment_anything import SamPredictor, sam_model_registry
 from sam_segment import build_sam_model
+from lama_inpaint import build_lama_model, inpaint_img_with_builded_lama
 from ostrack import build_ostrack_model, get_box_using_ostrack
 from pytracking.lib.test.evaluation.data import Sequence
 from pytracking.lib.utils.video_utils import video2frames, frames2video
-from utils import load_img_to_array, save_array_to_img, dilate_mask
+from utils import load_img_to_array, save_array_to_img, dilate_mask, show_mask
 
 # def setup_args(parser):
 #     parser.add_argument(
@@ -102,8 +107,9 @@ class RemoveAnythingVideo(nn.Module):
         assert target == "sam", "Only support sam now."
         return build_sam_model(**kwargs)
 
-    def build_inpainter(self, target="", **kwargs):
-        pass
+    def build_inpainter(self, target="lama", **kwargs):
+        assert target == "lama", "Only support lama now."
+        return build_lama_model(**kwargs)
 
     def forward_tracker(self, frames_ps, init_box):
         init_box = np.array(init_box).astype(np.float32).reshape(-1, 4)
@@ -128,7 +134,8 @@ class RemoveAnythingVideo(nn.Module):
         return masks, scores
 
     def forward_inpainter(self, img, mask):
-        raise NotImplementedError
+        return inpaint_img_with_builded_lama(
+            self.inpainter, img, mask, device=self.device)
 
     @property
     def device(self):
@@ -158,8 +165,6 @@ class RemoveAnythingVideo(nn.Module):
         import matplotlib.patches as patches
         fig, ax = plt.subplots(1)
         ax.imshow(img)
-
-        # x1, y1, x2, y2 = 230, 283, 352, 407
         x1, y1, w, h = box
         rect = patches.Rectangle((x1, y1), w, h, linewidth=2,
                                  edgecolor='r', facecolor='none')
@@ -168,7 +173,7 @@ class RemoveAnythingVideo(nn.Module):
 
     def forward(
             self,
-            all_frame_ps: List[str],
+            frame_ps: List[str],
             key_frame_idx: int,
             key_frame_point_coords: np.ndarray,
             key_frame_point_labels: np.ndarray,
@@ -177,7 +182,7 @@ class RemoveAnythingVideo(nn.Module):
     ):
         # get key-frame mask
         assert key_frame_idx == 0, "Only support key frame at the beginning."
-        key_frame_p = all_frame_ps[key_frame_idx]
+        key_frame_p = frame_ps[key_frame_idx]
         key_frame = load_img_to_array(key_frame_p)
         key_masks, key_scores = self.forward_segmentor(
             key_frame, key_frame_point_coords, key_frame_point_labels)
@@ -199,13 +204,13 @@ class RemoveAnythingVideo(nn.Module):
         # raise
 
         # get all-frame boxes using video tracker
-        all_box = self.forward_tracker(all_frame_ps, key_box)
+        all_box = self.forward_tracker(frame_ps, key_box)
 
         # get all-frame masks using sam
         all_mask = [key_mask]
         all_frame = [key_frame]
         ref_mask = key_mask
-        for frame_p, box in zip(all_frame_ps[1:], all_box[1:]):
+        for frame_p, box in zip(frame_ps[1:], all_box[1:]):
             frame = load_img_to_array(frame_p)
 
             # save_p = f"results/bbox/{Path(frame_p).name}"
@@ -227,8 +232,15 @@ class RemoveAnythingVideo(nn.Module):
             all_frame.append(frame)
 
         # get all-frame inpainted results
-        # all_frame = self.inpainter(all_frame, all_mask)
+        # for idx in range(len(all_frame)):
+        #     all_frame[idx] = self.forward_inpainter(all_frame[idx], all_mask[idx])
         return all_frame, all_mask, all_box
+
+
+def mkstemp(suffix, dir=None):
+    fd, path = tempfile.mkstemp(suffix=f"{suffix}", dir=dir)
+    os.close(fd)
+    return Path(path)
 
 
 if __name__ == "__main__":
@@ -237,6 +249,7 @@ if __name__ == "__main__":
     # args = parser.parse_args(sys.argv[1:])
     # device = "cuda" if torch.cuda.is_available() else "cpu"
 
+<<<<<<< HEAD
     point_labels = np.array([1])
     key_frame_mask_idx = 2
 
@@ -260,11 +273,96 @@ if __name__ == "__main__":
     all_frame_ps = all_frame_ps
     all_frame, all_mask, all_box = model(
         all_frame_ps, 0, point_coords, point_labels, key_frame_mask_idx,
+=======
+    # video_raw_p = './results/baymax.mp4'
+    # point_coords = np.array([[868, 813]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 50
+    # video_raw_p = './results/blackswan.mp4'
+    # point_coords = np.array([[329, 315]])
+    # key_frame_mask_idx = 1
+    # dilate_kernel_size = 50
+    # video_raw_p = './results/bmx-trees.mp4'
+    # point_coords = np.array([[448, 205]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 15
+    # video_raw_p = './results/boat.mp4'
+    # point_coords = np.array([[405, 263]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 15
+    # video_raw_p = './results/breakdance-flare.mp4'
+    # point_coords = np.array([[450, 252]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 15
+    video_raw_p = './results/car-turn.mp4'
+    point_coords = np.array([[744, 264]])
+    key_frame_mask_idx = 2
+    dilate_kernel_size = 35
+    # video_raw_p = './results/dance_p1.mp4'
+    # point_coords = np.array([[421, 765]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 50
+    # video_raw_p = './results/ikun.mp4'
+    # point_coords = np.array([[290, 341]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 15
+    # video_raw_p = './results/lalaland.mp4'
+    # point_coords = np.array([[846, 475]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 50
+    # video_raw_p = './results/tennis.mp4'
+    # point_coords = np.array([[374, 209]])
+    # key_frame_mask_idx = 2
+    # dilate_kernel_size = 20
+
+    output_dir = Path('./results')
+    video_stem = Path(video_raw_p).stem
+    frame_raw_dir = output_dir / video_stem / "raw"
+    frame_mask_dir = output_dir / video_stem / "mask"
+    video_rm_w_mask_p = output_dir / video_stem / f"{video_stem}_rm_w_mask.mp4"
+    video_w_mask_p = output_dir / video_stem / f"{video_stem}_w_mask.mp4"
+    frame_raw_dir.mkdir(exist_ok=True, parents=True)
+    frame_mask_dir.mkdir(exist_ok=True, parents=True)
+
+    frame_ps = sorted(glob.glob(str(frame_raw_dir / "*.jpg")))
+    frame_ps = frame_ps
+
+    if Path(video_raw_p).exists():
+        # video2frames(video_raw_p, frame_raw_dir)
+        all_frame = imageio.mimread(video_raw_p)
+    else:
+        all_frame = [imageio.v3.imread(frame_p) for frame_p in frame_ps]
+    if not Path(video_raw_p).exists():
+        imageio.mimwrite(video_raw_p, all_frame, fps=25, quality=10)
+
+    model = RemoveAnythingVideo()
+    all_frame_rm_w_mask, all_mask, all_box = model(
+        frame_ps, 0, point_coords, point_labels, key_frame_mask_idx,
+>>>>>>> 251313d43761d3c392ce70209371863f207d882a
         dilate_kernel_size
     )
+    # imageio.mimwrite(video_removed_p, all_frame_rm_w_mask, fps=25)
 
+    # visual mask
     for i, mask in enumerate(all_mask):
-        img_name = Path(all_frame_ps[i]).name
-        save_array_to_img(mask, mask_frame_dir / img_name)
+        img_name = Path(frame_ps[i]).name
+        save_array_to_img(mask, frame_mask_dir / img_name)
+
+    # visual video with mask
+    all_frame_w_mask = []
+    for i, mask in enumerate(all_mask):
+        frame = all_frame[i]
+        dpi = plt.rcParams['figure.dpi']
+        height, width = frame.shape[:2]
+        plt.figure(figsize=(width/dpi/0.77, height/dpi/0.77))
+        plt.imshow(frame)
+        plt.axis('off')
+        show_mask(plt.gca(), mask, random_color=False)
+        tmp_p = mkstemp(".png")
+        plt.savefig(tmp_p, bbox_inches='tight', pad_inches=0)
+        plt.close()
+        all_frame_w_mask.append(imageio.v3.imread(tmp_p))
+
+    imageio.mimwrite(video_w_mask_p, all_frame_w_mask, fps=25, quality=10)
 
 
