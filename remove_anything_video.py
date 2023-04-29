@@ -1,4 +1,6 @@
 import torch
+import sys
+import argparse
 import numpy as np
 import cv2
 import glob
@@ -12,7 +14,51 @@ from pytracking.lib.test.evaluation.data import Sequence
 from pytracking.lib.utils.video_utils import video2frames, frames2video
 from utils import load_img_to_array, save_array_to_img, dilate_mask
 
-
+# def setup_args(parser):
+#     parser.add_argument(
+#         "--input_img", type=str, required=True,
+#         help="Path to a single input img",
+#     )
+#     parser.add_argument(
+#         "--coords_type", type=str, required=True,
+#         default="key_in", choices=["click", "key_in"], 
+#         help="The way to select coords",
+#     )
+#     parser.add_argument(
+#         "--point_coords", type=float, nargs='+', required=True,
+#         help="The coordinate of the point prompt, [coord_W coord_H].",
+#     )
+#     parser.add_argument(
+#         "--point_labels", type=int, nargs='+', required=True,
+#         help="The labels of the point prompt, 1 or 0.",
+#     )
+#     parser.add_argument(
+#         "--dilate_kernel_size", type=int, default=None,
+#         help="Dilate kernel size. Default: None",
+#     )
+#     parser.add_argument(
+#         "--output_dir", type=str, required=True,
+#         help="Output path to the directory with results.",
+#     )
+#     parser.add_argument(
+#         "--sam_model_type", type=str,
+#         default="vit_h", choices=['vit_h', 'vit_l', 'vit_b'],
+#         help="The type of sam model to load. Default: 'vit_h"
+#     )
+#     parser.add_argument(
+#         "--sam_ckpt", type=str, required=True,
+#         help="The path to the SAM checkpoint to use for mask generation.",
+#     )
+#     parser.add_argument(
+#         "--lama_config", type=str,
+#         default="./lama/configs/prediction/default.yaml",
+#         help="The path to the config file of lama model. "
+#              "Default: the config of big-lama",
+#     )
+#     parser.add_argument(
+#         "--lama_ckpt", type=str, required=True,
+#         help="The path to the lama checkpoint.",
+#     )
 
 class RemoveAnythingVideo(nn.Module):
     def __init__(
@@ -32,7 +78,8 @@ class RemoveAnythingVideo(nn.Module):
         if segmentor_build_args is None:
             segmentor_build_args = {
                 "model_type": "vit_h",
-                "ckpt_p": "./pretrained_models/sam_vit_h_4b8939.pth"
+                # "ckpt_p": "./pretrained_models/sam_vit_h_4b8939.pth"
+                "ckpt_p": "/data1/yutao/projects/IAM/pretrained_models/sam_vit_h_4b8939.pth"
             }
         if inpainter_build_args is None:
             inpainter_build_args = {
@@ -185,48 +232,18 @@ class RemoveAnythingVideo(nn.Module):
 
 
 if __name__ == "__main__":
-    point_labels = np.array([1])
+    # parser = argparse.ArgumentParser()
+    # setup_args(parser)
+    # args = parser.parse_args(sys.argv[1:])
+    # device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    video_path = './results/baymax.mp4'
-    point_coords = np.array([[868, 813]])
+    point_labels = np.array([1])
     key_frame_mask_idx = 2
-    dilate_kernel_size = 50
-    # video_path = './results/blackswan.mp4'
-    # point_coords = np.array([[329, 315]])
-    # key_frame_mask_idx = 1
-    # dilate_kernel_size = 50
-    # video_path = './results/bmx-trees.mp4'
-    # point_coords = np.array([[448, 205]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_path = './results/boat.mp4'
-    # point_coords = np.array([[405, 263]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_path = './results/breakdance-flare.mp4'
-    # point_coords = np.array([[450, 252]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_path = './results/car-turn.mp4'
-    # point_coords = np.array([[744, 264]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 35
-    # video_path = './results/dance_p1.mp4'
-    # point_coords = np.array([[421, 765]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 50
-    # video_path = './results/ikun.mp4'
-    # point_coords = np.array([[290, 341]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_path = './results/lalaland.mp4'
-    # point_coords = np.array([[846, 475]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 50
-    # video_path = './results/tennis.mp4'
-    # point_coords = np.array([[374, 209]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 20
+
+    video_path = '/data1/yutao/projects/Inpaint-Anything/example/remove-anything-video/breakdance-flare/original_video.mp4'
+    point_coords = np.array([[450, 252]])
+    dilate_kernel_size = 15
+
 
     output_dir = Path('./results')
     raw_frame_dir = output_dir / Path(video_path).stem / "raw"
@@ -234,10 +251,11 @@ if __name__ == "__main__":
     raw_frame_dir.mkdir(exist_ok=True, parents=True)
     mask_frame_dir.mkdir(exist_ok=True, parents=True)
 
-    # if Path(video_path).exists():
-    #     video2frames(video_path, raw_frame_dir)
+    if Path(video_path).exists():
+        video2frames(video_path, raw_frame_dir)
 
     model = RemoveAnythingVideo()
+    # model = RemoveAnythingVideo(segmentor_build_args=args)
     all_frame_ps = sorted(glob.glob(str(raw_frame_dir / "*.jpg")))
     all_frame_ps = all_frame_ps
     all_frame, all_mask, all_box = model(
