@@ -332,14 +332,6 @@ With a single click on an object in the first frame of the video, Remove Anythin
 
 <table>
     <tr>
-      <td><img src="./example/remove-anything-video/tennis-vest/original.gif" width="100%"></td>
-      <td><img src="./example/remove-anything-video/tennis-vest/mask.gif" width="100%"></td>
-      <td><img src="./example/remove-anything-video/tennis-vest/removed.gif" width="100%"></td>
-    </tr>
-</table>
-
-<table>
-    <tr>
       <td><img src="./example/remove-anything-video/paragliding/original.gif" width="100%"></td>
       <td><img src="./example/remove-anything-video/paragliding/mask.gif" width="100%"></td>
       <td><img src="./example/remove-anything-video/paragliding/removed.gif" width="100%"></td>
@@ -354,6 +346,13 @@ With a single click on an object in the first frame of the video, Remove Anythin
     </tr>
 </table>
 
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-video/tennis-vest/original.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/tennis-vest/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/tennis-vest/removed.gif" width="100%"></td>
+    </tr>
+</table>
 
 ## Acknowledgments
 - [Segment Anything](https://github.com/facebookresearch/segment-anything)
