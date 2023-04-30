@@ -28,8 +28,8 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 - [ ] [Fill Anything **3D**]
 - [ ] [Replace Anything **3D**]
 - [x] [Remove Anything **Video**](#remove-anything-video) (<span style="color:red">🔥NEW</span>)
-- [ ] [Remove Anything **Video**]
-- [ ] [Remove Anything **Video**]
+- [ ] [Fill Anything **Video**]
+- [ ] [Replace Anything **Video**]
 
 
 ## 💡 Highlights
