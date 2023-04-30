@@ -3,6 +3,7 @@
 </p>
 
 # Inpaint Anything: Segment Anything Meets Image Inpainting
+Inpaint Anything can inpaint anything in **images**, **videos** and **3D scenes**!
 - Authors: Tao Yu, Runseng Feng, Ruoyu Feng, Jinming Liu, Xin Jin, Wenjun Zeng and Zhibo Chen.
 - Institutes: University of Science and Technology of China; Eastern Institute for Advanced Study.
 - [[Paper](https://arxiv.org/abs/2304.06790)] [[Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything)] [[Hugging Face Homepage](https://huggingface.co/InpaintAI)]
@@ -16,22 +17,28 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 [2023/4/30] [Remove Anything Video](#remove-anything-video) available! You can remove any object from a video!\
 [2023/4/24] [Local web UI](./app) supported! You can run the demo website locally!\
 [2023/4/22] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) available! You can experience Inpaint Anything through the interface!\
-[2023/4/22] [Remove Anything 3D](#remove-anything-3d) available! You can remove any 3D object from a 3D scene!
+[2023/4/22] [Remove Anything 3D](#remove-anything-3d) available! You can remove any 3D object from a 3D scene!\
+[2023/4/13] [Technical report on arXiv](https://arxiv.org/abs/2304.06790) available!
 
 ## 🌟 Features
 - [x] [**Remove** Anything](#remove-anything)
 - [x] [**Fill** Anything](#fill-anything)
 - [x] [**Replace** Anything](#replace-anything)
 - [x] [Remove Anything **3D**](#remove-anything-3d) (<span style="color:red">🔥NEW</span>)
+- [ ] [Fill Anything **3D**]
+- [ ] [Replace Anything **3D**]
 - [x] [Remove Anything **Video**](#remove-anything-video) (<span style="color:red">🔥NEW</span>)
+- [ ] [Remove Anything **Video**]
+- [ ] [Remove Anything **Video**]
 
 
 ## 💡 Highlights
 - [x] Any aspect ratio supported
 - [x] 2K resolution supported
-- [x] [Technical report on arXiv](https://arxiv.org/abs/2304.06790)
-- [x] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) (<span style="color:red">🔥NEW</span>)
-- [x] [Local web UI](./app) supported (<span style="color:red">🔥NEW</span>)
+- [x] [Technical report on arXiv](https://arxiv.org/abs/2304.06790) available (<span style="color:red">🔥NEW</span>)
+- [x] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) available (<span style="color:red">🔥NEW</span>)
+- [x] [Local web UI](./app) available (<span style="color:red">🔥NEW</span>)
+- [x] Multiple modalities (i.e., image, video and 3D scene) supported (<span style="color:red">🔥NEW</span>)
 
 <!-- ## Updates
 | Date | News |
@@ -320,7 +327,7 @@ Remove Anything 3D can remove any object from a 3D scene! We release some result
 
 
 ## <span id="remove-anything-video">📌 Remove Anything Video</span>
-With a single click on an object in the first frame of the video, Remove Anything Video will remove the object from the video! We release some results below. (Code and implementation details will be released soon.)
+With a single click on an object in the first video frame, Remove Anything Video can remove the object from the whole video! We release some results below. (Code and implementation details will be released soon.)
 
 <table>
     <tr>
