@@ -13,6 +13,7 @@
 TL; DR: Users can select any object in an image by clicking on it. With powerful vision models, e.g., [SAM](https://arxiv.org/abs/2304.02643), [LaMa](https://arxiv.org/abs/2109.07161) and [Stable Diffusion (SD)](https://arxiv.org/abs/2112.10752), **Inpaint Anything** is able to remove the object smoothly (i.e., *Remove Anything*). Further, prompted by user input text, Inpaint Anything can fill the object with any desired content (i.e., *Fill Anything*) or replace the background of it arbitrarily (i.e., *Replace Anything*).
 
 ## 📜 News
+[2023/4/30] [Remove Anything Video](#remove-anything-video) available! You can remove any object from a video!\
 [2023/4/24] [Local web UI](./app) supported! You can run the demo website locally!\
 [2023/4/22] [Website](https://huggingface.co/spaces/InpaintAI/Inpaint-Anything) available! You can experience Inpaint Anything through the interface!\
 [2023/4/22] [Remove Anything 3D](#remove-anything-3d) available! You can remove any 3D object from a 3D scene!
@@ -22,6 +23,7 @@ TL; DR: Users can select any object in an image by clicking on it. With powerful
 - [x] [**Fill** Anything](#fill-anything)
 - [x] [**Replace** Anything](#replace-anything)
 - [x] [Remove Anything **3D**](#remove-anything-3d) (<span style="color:red">🔥NEW</span>)
+- [x] [Remove Anything **Video**](#remove-anything-video) (<span style="color:red">🔥NEW</span>)
 
 
 ## 💡 Highlights
@@ -66,7 +68,7 @@ python -m pip install torch torchvision torchaudio
 python -m pip install -e segment_anything
 python -m pip install -r lama/requirements.txt 
 ```
-On Windows system, we recommend to first install [miniconda](https://docs.conda.io/en/latest/miniconda.html) and 
+In Windows, we recommend you to first install [miniconda](https://docs.conda.io/en/latest/miniconda.html) and 
 open `Anaconda Powershell Prompt (miniconda3)` as administrator.
 Then pip install [./lama_requirements_windows.txt](lama_requirements_windows.txt) instead of 
 [./lama/requirements.txt](lama%2Frequirements.txt).
@@ -298,7 +300,7 @@ python replace_anything.py \
 </table>
 
 ## <span id="remove-anything-3d">📌 Remove Anything 3D</span>
-Remove Anything 3D can remove any object from a 3D scene! We release some results below.
+Remove Anything 3D can remove any object from a 3D scene! We release some results below. (Code and implementation details will be released soon.)
 
 <table>
     <tr>
@@ -313,6 +315,42 @@ Remove Anything 3D can remove any object from a 3D scene! We release some result
       <td><img src="./example/remove-anything-3d/room/org.gif" width="100%"></td>
       <td><img src="./example/remove-anything-3d/room/mask.gif" width="100%"></td>
       <td><img src="./example/remove-anything-3d/room/result.gif" width="100%"></td>
+    </tr>
+</table>
+
+
+## <span id="remove-anything-video">📌 Remove Anything Video</span>
+With a single click on an object in the first frame of the video, Remove Anything Video will remove the object from the video! We release some results below. (Code and implementation details will be released soon.)
+
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-video/drift-chicane/original.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/drift-chicane/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/drift-chicane/removed.gif" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-video/tennis-vest/original.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/tennis-vest/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/tennis-vest/removed.gif" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-video/paragliding/original.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/paragliding/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/paragliding/removed.gif" width="100%"></td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-video/surf/original.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/surf/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/surf/removed.gif" width="100%"></td>
     </tr>
 </table>
 
