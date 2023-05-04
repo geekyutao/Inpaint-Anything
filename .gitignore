@@ -16,6 +16,5 @@ pretrained_models/
 pytracking/pretrain/
 
 results/*
-*.mp4
 
 
