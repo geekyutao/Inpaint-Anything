@@ -7,6 +7,8 @@ from typing import Any, Dict, List
 from pathlib import Path
 from PIL import Image
 import os
+import sys
+import argparse
 import tempfile
 import imageio
 import imageio.v2 as iio
@@ -18,50 +20,104 @@ from ostrack import build_ostrack_model, get_box_using_ostrack
 from sttn_video_inpaint import build_sttn_model, \
     inpaint_video_with_builded_sttn
 from pytracking.lib.test.evaluation.data import Sequence
-from utils import dilate_mask, show_mask, show_points
+from utils import dilate_mask, show_mask, show_points, get_clicked_point
 
+
+def setup_args(parser):
+    parser.add_argument(
+        "--input_video", type=str, required=True,
+        help="Path to a single input video",
+    )
+    parser.add_argument(
+        "--coords_type", type=str, required=True,
+        default="key_in", choices=["click", "key_in"], 
+        help="The way to select coords",
+    )
+    parser.add_argument(
+        "--point_coords", type=float, nargs='+', required=True,
+        help="The coordinate of the point prompt, [coord_W coord_H].",
+    )
+    parser.add_argument(
+        "--point_labels", type=int, nargs='+', required=True,
+        help="The labels of the point prompt, 1 or 0.",
+    )
+    parser.add_argument(
+        "--dilate_kernel_size", type=int, default=None,
+        help="Dilate kernel size. Default: None",
+    )
+    parser.add_argument(
+        "--output_dir", type=str, required=True,
+        help="Output path to the directory with results.",
+    )
+    parser.add_argument(
+        "--sam_model_type", type=str,
+        default="vit_h", choices=['vit_h', 'vit_l', 'vit_b'],
+        help="The type of sam model to load. Default: 'vit_h"
+    )
+    parser.add_argument(
+        "--sam_ckpt", type=str, required=True,
+        help="The path to the SAM checkpoint to use for mask generation.",
+    )
+    parser.add_argument(
+        "--lama_config", type=str,
+        default="./lama/configs/prediction/default.yaml",
+        help="The path to the config file of lama model. "
+             "Default: the config of big-lama",
+    )
+    parser.add_argument(
+        "--lama_ckpt", type=str, required=True,
+        help="The path to the lama checkpoint.",
+    )
+    parser.add_argument(
+        "--tracker_ckpt", type=str, required=True,
+        help="The path to tracker checkpoint.",
+    )
+    parser.add_argument(
+        "--vi_ckpt", type=str, required=True,
+        help="The path to video inpainter checkpoint.",
+    )
+    parser.add_argument(
+        "--mask_idx", type=int, default=2, required=True,
+        help="Which mask in the first frame to determine the inpaint region.",
+    )
+    parser.add_argument(
+        "--fps", type=int, default=25, required=True,
+        help="FPS of the input and output videos.",
+    )
 
 class RemoveAnythingVideo(nn.Module):
-    build_args = {
-        "ostrack": {
-            "tracker_param": "vitb_384_mae_ce_32x4_ep300"
-        },
-        "sam": {
-            "model_type": "vit_h",
-            "ckpt_p": "./pretrained_models/sam_vit_h_4b8939.pth"
-        },
-        "lama": {
-            "lama_config": "./lama/configs/prediction/default.yaml",
-            "lama_ckpt": "./pretrained_models/big-lama"
-        },
-        "sttn": {
-            "model_type": "sttn",
-            "ckpt_p": "./pretrained_models/sttn.pth"
-        }
-    }
     def __init__(
-            self,
+            self, 
+            args,
             tracker_target="ostrack",
-            tracker_build_args: Dict = None,
             segmentor_target="sam",
-            segmentor_build_args: Dict = None,
             inpainter_target="sttn",
-            inpainter_build_args: Dict = None,
     ):
         super().__init__()
-        if tracker_build_args is None:
-            tracker_build_args = self.build_args[tracker_target]
-        if segmentor_build_args is None:
-            segmentor_build_args = self.build_args[segmentor_target]
-        if inpainter_build_args is None:
-            inpainter_build_args = self.build_args[inpainter_target]
+        tracker_build_args = {
+            "tracker_param": args.tracker_ckpt
+        }
+        segmentor_build_args = {
+            "model_type": args.sam_model_type,
+            "ckpt_p": args.sam_ckpt
+        }
+        inpainter_build_args = {
+            "lama": {
+                "lama_config": args.lama_config,
+                "lama_ckpt": args.lama_ckpt
+            },
+            "sttn": {
+                "model_type": "sttn",
+                "ckpt_p": args.vi_ckpt
+            }
+        }
 
         self.tracker = self.build_tracker(
             tracker_target, **tracker_build_args)
         self.segmentor = self.build_segmentor(
             segmentor_target, **segmentor_build_args)
         self.inpainter = self.build_inpainter(
-            inpainter_target, **inpainter_build_args)
+            inpainter_target, **inpainter_build_args[inpainter_target])
         self.tracker_target = tracker_target
         self.segmentor_target = segmentor_target
         self.inpainter_target = inpainter_target
@@ -167,22 +223,12 @@ class RemoveAnythingVideo(nn.Module):
             key_mask = key_masks[key_frame_mask_idx]
         else:
             key_mask = self.mask_selection(key_masks, key_scores)
+        
         if dilate_kernel_size is not None:
             key_mask = dilate_mask(key_mask, dilate_kernel_size)
 
         # get key-frame box
         key_box = self.get_box_from_mask(key_mask)
-
-        # tmp_dir = Path("results/tmp")
-        # tmp_dir.mkdir(exist_ok=True, parents=True)
-        # iio.imwrite(tmp_dir / "img.png", key_frame)
-        # iio.imwrite(tmp_dir / "img_mask.png", np.uint8(key_mask * 255))
-        # iio.imwrite(tmp_dir / "img_w_mask.png", show_img_with_mask(
-        #     key_frame, key_mask))
-        # iio.imwrite(tmp_dir / "img_w_point.png", show_img_with_point(
-        #     key_frame, key_frame_point_coords, key_frame_point_labels))
-        # iio.imwrite(tmp_dir / "img_w_box.png",
-        #     show_img_with_box(key_frame, key_box))
 
         # get all-frame boxes using video tracker
         print("Tracking ...")
@@ -247,77 +293,69 @@ def show_img_with_point(img, point_coords, point_labels):
     return iio.imread(tmp_p)
 
 def show_img_with_box(img, box):
-    fig, ax = plt.subplots(1)
+    dpi = plt.rcParams['figure.dpi']
+    height, width = img.shape[:2]
+    fig, ax = plt.subplots(1, figsize=(width / dpi / 0.77, height / dpi / 0.77))
     ax.imshow(img)
+    ax.axis('off')
+
     x1, y1, w, h = box
     rect = patches.Rectangle((x1, y1), w, h, linewidth=2,
                              edgecolor='r', facecolor='none')
     ax.add_patch(rect)
     tmp_p = mkstemp(".png")
-    plt.savefig(tmp_p, bbox_inches='tight', pad_inches=0)
+    fig.savefig(tmp_p, bbox_inches='tight', pad_inches=0)
     plt.close()
     return iio.imread(tmp_p)
 
 
-@torch.no_grad()
-def main():
+
+if __name__ == "__main__":
+    """Example usage:
+    python remove_anything_video.py \
+        --input_video ./example/video/paragliding/original_video.mp4 \
+        --coords_type key_in \
+        --point_coords 652 162 \
+        --point_labels 1 \
+        --dilate_kernel_size 15 \
+        --output_dir ./results \
+        --sam_model_type "vit_h" \
+        --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth \
+        --lama_config lama/configs/prediction/default.yaml \
+        --lama_ckpt ./pretrained_models/big-lama \
+        --tracker_ckpt vitb_384_mae_ce_32x4_ep300 \
+        --vi_ckpt ./pretrained_models/sttn.pth \
+        --mask_idx 2 \
+        --fps 25
+    """
+    parser = argparse.ArgumentParser()
+    setup_args(parser)
+    args = parser.parse_args(sys.argv[1:])
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
     import logging
     logger = logging.getLogger('imageio')
     logger.setLevel(logging.ERROR)
 
-    # video_raw_p = './results/baymax.mp4'
-    # point_coords = np.array([[868, 813]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 50
-    # video_raw_p = './results/blackswan.mp4'
-    # point_coords = np.array([[329, 315]])
-    # key_frame_mask_idx = 1
-    # dilate_kernel_size = 50
-    # video_raw_p = './results/bmx-trees.mp4'
-    # point_coords = np.array([[448, 205]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_raw_p = './results/boat.mp4'
-    # point_coords = np.array([[405, 263]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_raw_p = './results/breakdance-flare.mp4'
-    # point_coords = np.array([[450, 252]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_raw_p = './results/car-turn.mp4'
-    # point_coords = np.array([[744, 264]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 35
-    # video_raw_p = './results/dance_p1.mp4'
-    # point_coords = np.array([[421, 765]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 50
-    # video_raw_p = './results/ikun.mp4'
-    # point_coords = np.array([[290, 341]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 15
-    # video_raw_p = './results/lalaland.mp4'
-    # point_coords = np.array([[846, 475]])
-    # key_frame_mask_idx = 2
-    # dilate_kernel_size = 50
-    video_raw_p = './results/tennis.mp4'
+    point_labels = np.array(args.point_labels)
+    if args.coords_type == "click":
+        point_coords = get_clicked_point(args.input_img)
+    elif args.coords_type == "key_in":
+        point_coords = args.point_coords
+    point_coords = np.array([point_coords])
+    dilate_kernel_size = args.dilate_kernel_size
+    key_frame_mask_idx = args.mask_idx
+    video_raw_p = args.input_video
     frame_raw_glob = None
-    point_coords = np.array([[374, 209]])
-    key_frame_mask_idx = 2
-    dilate_kernel_size = 20
-
-    point_labels = np.array([1])
+    fps = args.fps
     num_frames = 10000
-
-    # pre-defined save path
-    output_dir = Path('./results')
-    video_stem = Path(video_raw_p).stem
-    frame_mask_dir = output_dir / video_stem / "mask"
-    video_mask_p = output_dir / video_stem / "mask.mp4"
-    video_rm_w_mask_p = output_dir / video_stem / f"removed_w_mask.mp4"
-    video_w_mask_p = output_dir / video_stem / f"w_mask.mp4"
-    video_w_box_p = output_dir / video_stem / f"w_box.mp4"
+    output_dir = args.output_dir
+    output_dir = Path(f"{output_dir}")
+    frame_mask_dir = output_dir / f"mask_{dilate_kernel_size}"
+    video_mask_p = output_dir / f"mask_{dilate_kernel_size}.mp4"
+    video_rm_w_mask_p = output_dir / f"removed_w_mask_{dilate_kernel_size}.mp4"
+    video_w_mask_p = output_dir / f"w_mask_{dilate_kernel_size}.mp4"
+    video_w_box_p = output_dir / f"w_box_{dilate_kernel_size}.mp4"
     frame_mask_dir.mkdir(exist_ok=True, parents=True)
 
     # load raw video or raw frames
@@ -343,12 +381,13 @@ def main():
 
     # inference
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model = RemoveAnythingVideo()
+    model = RemoveAnythingVideo(args)
     model.to(device)
-    all_frame_rm_w_mask, all_mask, all_box = model(
-        frame_ps, 0, point_coords, point_labels, key_frame_mask_idx,
-        dilate_kernel_size
-    )
+    with torch.no_grad():
+        all_frame_rm_w_mask, all_mask, all_box = model(
+            frame_ps, 0, point_coords, point_labels, key_frame_mask_idx,
+            dilate_kernel_size
+        )
     # visual removed results
     iio.mimwrite(video_rm_w_mask_p, all_frame_rm_w_mask, fps=fps)
 
@@ -368,7 +407,3 @@ def main():
     for i in range(len(all_box)):
         tmp.append(show_img_with_box(all_frame[i], all_box[i]))
     iio.mimwrite(video_w_box_p, tmp, fps=fps)
-
-
-if __name__ == "__main__":
-    main()
