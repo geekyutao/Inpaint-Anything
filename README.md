@@ -85,7 +85,7 @@ Download the model checkpoints provided in [Segment Anything](./segment_anything
 and [LaMa](./lama/README.md) (e.g., [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) 
 and [big-lama](https://disk.yandex.ru/d/ouP6l8VJ0HpMZg)), and put them into `./pretrained_models`.
 
-Specify an image and a point, and Inpaint-Anything will remove the object at the point.
+Specify an image and a point, and Remove Anything will remove the object at the point.
 ```bash
 python remove_anything.py \
     --input_img ./example/remove-anything/dog.jpg \
@@ -355,7 +355,7 @@ python -m pip install jpeg4py lmdb
 ### Usage
 Download the model checkpoints provided in [Segment Anything](./segment_anything/README.md) and [STTN](./sttn/README.md) (e.g., [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) and [sttn.pth](https://drive.google.com/file/d/1ZAMV8547wmZylKRt5qR_tC5VlosXD4Wv/view)), and put them into `./pretrained_models`. Further, download [OSTrack](https://github.com/botaoye/OSTrack) pretrained model from [here](https://drive.google.com/drive/folders/1ttafo0O5S9DXK2PX0YqPvPrQ-HWJjhSy) (e.g., [vitb_384_mae_ce_32x4_ep300.pth](https://drive.google.com/drive/folders/1XJ70dYB6muatZ1LPQGEhyvouX-sU_wnu)) and put it into `./pytracking/pretrain`.
 
-Specify a video, a point, video FPS and mask index (indicating using which mask result of the first frame), and Inpaint-Anything-Video will remove the object from the whole video.
+Specify a video, a point, video FPS and mask index (indicating using which mask result of the first frame), and Remove Anything Video will remove the object from the whole video.
 ```bash
 python remove_anything_video.py \
     --input_video ./example/video/paragliding/original_video.mp4 \
