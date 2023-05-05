@@ -13,3 +13,8 @@ __pycache__/
 
 # pretrained_models
 pretrained_models/
+pytracking/pretrain/
+
+results/*
+
+
