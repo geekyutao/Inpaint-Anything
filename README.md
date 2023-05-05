@@ -81,8 +81,8 @@ Then pip install [./lama_requirements_windows.txt](lama_requirements_windows.txt
 [./lama/requirements.txt](lama%2Frequirements.txt).
 
 ### Usage
-Download the model checkpoints provided in [segment_anything](./segment_anything/README.md) 
-and [lama](./lama/README.md) (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) 
+Download the model checkpoints provided in [Segment Anything](./segment_anything/README.md) 
+and [LaMa](./lama/README.md) (e.g., [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) 
 and [big-lama](https://disk.yandex.ru/d/ouP6l8VJ0HpMZg)), and put them into `./pretrained_models`.
 
 Specify an image and a point, and Inpaint-Anything will remove the object at the point.
@@ -166,8 +166,8 @@ python -m pip install diffusers transformers accelerate scipy safetensors
 ```
 
 ### Usage
-Download the model checkpoints provided in [segment_anything](./segment_anything/README.md)
-(e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)).
+Download the model checkpoints provided in [Segment Anything](./segment_anything/README.md)
+(e.g., [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)).
 , and put them into `./pretrained_models`.
 
 Specify an image, a point and text prompt, and run:
@@ -252,7 +252,7 @@ python -m pip install diffusers transformers accelerate scipy safetensors
 ```
 
 ### Usage
-Download the model checkpoints provided in [segment_anything](./segment_anything/README.md)
+Download the model checkpoints provided in [Segment Anything](./segment_anything/README.md)
 (e.g. [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth))
 , and put them into `./pretrained_models`.
 
@@ -327,21 +327,60 @@ Remove Anything 3D can remove any object from a 3D scene! We release some result
 
 
 ## <span id="remove-anything-video">📌 Remove Anything Video</span>
-With a single click on an object in the first video frame, Remove Anything Video can remove the object from the whole video! We release some results below. (Code and implementation details will be released soon.)
-
-<table>
-    <tr>
-      <td><img src="./example/remove-anything-video/drift-chicane/original.gif" width="100%"></td>
-      <td><img src="./example/remove-anything-video/drift-chicane/mask.gif" width="100%"></td>
-      <td><img src="./example/remove-anything-video/drift-chicane/removed.gif" width="100%"></td>
-    </tr>
-</table>
-
 <table>
     <tr>
       <td><img src="./example/remove-anything-video/paragliding/original.gif" width="100%"></td>
       <td><img src="./example/remove-anything-video/paragliding/mask.gif" width="100%"></td>
       <td><img src="./example/remove-anything-video/paragliding/removed.gif" width="100%"></td>
+    </tr>
+</table>
+
+With a single **click** on an object in the *first* video frame, Remove Anything Video can remove the object from the *whole* video!
+- Click on an object in the first frame of a video;
+- [SAM](https://segment-anything.com/) segments the object out (with three possible masks);
+- Select one mask;
+- A tracking model such as [OSTrack](https://github.com/botaoye/OSTrack) is ultilized to track the object in the video;
+- SAM segments the object out in each frame according to tracking results;
+- A video inpainting model such as [STTN](https://github.com/researchmm/STTN) is ultilized to inpaint the object in each frame.
+
+### Installation
+Requires `python>=3.8`
+```bash
+python -m pip install torch torchvision torchaudio
+python -m pip install -e segment_anything
+python -m pip install -r lama/requirements.txt
+python -m pip install jpeg4py lmdb
+```
+
+### Usage
+Download the model checkpoints provided in [Segment Anything](./segment_anything/README.md) and [STTN](./sttn/README.md) (e.g., [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth) and [sttn.pth](https://drive.google.com/file/d/1ZAMV8547wmZylKRt5qR_tC5VlosXD4Wv/view)), and put them into `./pretrained_models`. Further, download [OSTrack](https://github.com/botaoye/OSTrack) pretrained model from [here](https://drive.google.com/drive/folders/1ttafo0O5S9DXK2PX0YqPvPrQ-HWJjhSy) (e.g., [vitb_384_mae_ce_32x4_ep300.pth](https://drive.google.com/drive/folders/1XJ70dYB6muatZ1LPQGEhyvouX-sU_wnu)) and put it into `./pytracking/pretrain`.
+
+Specify a video, a point, video FPS and mask index (indicating using which mask result of the first frame), and Inpaint-Anything-Video will remove the object from the whole video.
+```bash
+python remove_anything_video.py \
+    --input_video ./example/video/paragliding/original_video.mp4 \
+    --coords_type key_in \
+    --point_coords 652 162 \
+    --point_labels 1 \
+    --dilate_kernel_size 15 \
+    --output_dir ./results \
+    --sam_model_type "vit_h" \
+    --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth \
+    --lama_config lama/configs/prediction/default.yaml \
+    --lama_ckpt ./pretrained_models/big-lama \
+    --tracker_ckpt vitb_384_mae_ce_32x4_ep300 \
+    --vi_ckpt ./pretrained_models/sttn.pth \
+    --mask_idx 2 \
+    --fps 25
+```
+The `--mask_idx` is usually set to 2, which typically is the most confident mask result of the first frame. If the object is not segmented out well, you can try other masks (0 or 1).
+
+### Demo
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-video/drift-chicane/original.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/drift-chicane/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/drift-chicane/removed.gif" width="100%"></td>
     </tr>
 </table>
 
@@ -361,12 +400,20 @@ With a single click on an object in the first video frame, Remove Anything Video
     </tr>
 </table>
 
+<table>
+    <tr>
+      <td><img src="./example/remove-anything-video/dog-gooses/original.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/dog-gooses/mask.gif" width="100%"></td>
+      <td><img src="./example/remove-anything-video/dog-gooses/removed.gif" width="100%"></td>
+    </tr>
+</table>
+
 ## Acknowledgments
 - [Segment Anything](https://github.com/facebookresearch/segment-anything)
 - [LaMa](https://github.com/advimman/lama)
 - [Stable Diffusion](https://github.com/CompVis/stable-diffusion)
-
-
+- [OSTrack](https://github.com/botaoye/OSTrack)
+- [STTN](https://github.com/researchmm/STTN)
 
  ## Other Interesting Repositories
 - [Awesome Anything](https://github.com/VainF/Awesome-Anything)
