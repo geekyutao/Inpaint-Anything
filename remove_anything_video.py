@@ -337,12 +337,6 @@ if __name__ == "__main__":
     logger = logging.getLogger('imageio')
     logger.setLevel(logging.ERROR)
 
-    point_labels = np.array(args.point_labels)
-    if args.coords_type == "click":
-        point_coords = get_clicked_point(args.input_img)
-    elif args.coords_type == "key_in":
-        point_coords = args.point_coords
-    point_coords = np.array([point_coords])
     dilate_kernel_size = args.dilate_kernel_size
     key_frame_mask_idx = args.mask_idx
     video_raw_p = args.input_video
@@ -378,6 +372,13 @@ if __name__ == "__main__":
         iio.mimwrite(video_raw_p, all_frame, fps=fps)
 
     frame_ps = frame_ps[:num_frames]
+    
+    point_labels = np.array(args.point_labels)
+    if args.coords_type == "click":
+        point_coords = get_clicked_point(frame_ps[0])
+    elif args.coords_type == "key_in":
+        point_coords = args.point_coords
+    point_coords = np.array([point_coords])
 
     # inference
     device = "cuda" if torch.cuda.is_available() else "cpu"
