@@ -44,7 +44,7 @@ def setup_args(parser):
     )
     parser.add_argument(
         "--sam_model_type", type=str,
-        default="vit_h", choices=['vit_h', 'vit_l', 'vit_b'],
+        default="vit_h", choices=['vit_h', 'vit_l', 'vit_b', 'vit_t'],
         help="The type of sam model to load. Default: 'vit_h"
     )
     parser.add_argument(
