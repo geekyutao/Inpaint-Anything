@@ -321,7 +321,7 @@ python replace_anything.py \
 </table>
 
 ## <span id="remove-anything-3d">📌 Remove Anything 3D</span>
-Remove Anything 3D can remove any object from a 3D scene! We release some results below. (Code and implementation details will be released soon.)
+<!-- Remove Anything 3D can remove any object from a 3D scene! We release some results below. (Code and implementation details will be released soon.) -->
 
 <table>
     <tr>
@@ -338,6 +338,53 @@ Remove Anything 3D can remove any object from a 3D scene! We release some result
       <td><img src="./example/remove-anything-3d/room/result.gif" width="100%"></td>
     </tr>
 </table>
+
+With a single **click** on an object in the *first* view of source views, Remove Anything 3D can remove the object from the *whole* scene!
+- Click on an object in the first view of source views;
+- [SAM](https://segment-anything.com/) segments the object out (with three possible masks);
+- Select one mask;
+- A tracking model such as [OSTrack](https://github.com/botaoye/OSTrack) is ultilized to track the object in these views;
+- SAM segments the object out in each source view according to tracking results;
+- An inpainting model such as [LaMa](https://advimman.github.io/lama-project/) is ultilized to inpaint the object in each source view.
+- A novel view synthesizing model such as [NeRF](https://github.com/yenchenlin/nerf-pytorch) is ultilized to synthesize novel views of the scene without the object.
+
+### Installation
+Requires `python>=3.8`
+```bash
+python -m pip install torch torchvision torchaudio
+python -m pip install -e segment_anything
+python -m pip install -r lama/requirements.txt
+python -m pip install jpeg4py lmdb
+```
+
+### Usage
+Download the model checkpoints provided in [Segment Anything](./segment_anything/README.md) and [LaMa](./lama/README.md) (e.g., [sam_vit_h_4b8939.pth](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth)), and put them into `./pretrained_models`. Further, download [OSTrack](https://github.com/botaoye/OSTrack) pretrained model from [here](https://drive.google.com/drive/folders/1ttafo0O5S9DXK2PX0YqPvPrQ-HWJjhSy) (e.g., [vitb_384_mae_ce_32x4_ep300.pth](https://drive.google.com/drive/folders/1XJ70dYB6muatZ1LPQGEhyvouX-sU_wnu)) and put it into `./pytracking/pretrain`. In addition, download [nerf_llff_data] (e.g, [horns](https://drive.google.com/drive/folders/1boi3eK8jNC8yv8IJ7lcL5_F1vutL3imc)), and put them into `./example/3d`. For simplicity, you can also go [here](https://drive.google.com/drive/folders/1ST0aRbDRZGli0r7OVVOQvXwtadMCuWXg?usp=sharing), directly download [pretrained_models](https://drive.google.com/drive/folders/1wpY-upCo4GIW4wVPnlMh_ym779lLIG2A?usp=sharing), put the directory into `./` and get `./pretrained_models`. Additionally, download [pretrain](https://drive.google.com/drive/folders/1SERTIfS7JYyOOmXWujAva4CDQf-W7fjv?usp=sharing), put the directory into `./pytracking` and get `./pytracking/pretrain`. 
+
+For MobileSAM, the sam_model_type should use "vit_t", and the sam_ckpt should use "./weights/mobile_sam.pt".
+For the MobileSAM project, please refer to [MobileSAM](https://github.com/ChaoningZhang/MobileSAM)
+```
+bash script/remove_anything_3d.sh
+
+```
+Specify a 3d scene, a point, scene config and mask index (indicating using which mask result of the first view), and Remove Anything 3D will remove the object from the whole scene.
+```bash
+python remove_anything_3d.py \
+      --input_dir ./example/3d/horns \
+      --coords_type key_in \
+      --point_coords 830 405 \
+      --point_labels 1 \
+      --dilate_kernel_size 15 \
+      --output_dir ./results \
+      --sam_model_type "vit_h" \
+      --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth \
+      --lama_config ./lama/configs/prediction/default.yaml \
+      --lama_ckpt ./pretrained_models/big-lama \
+      --tracker_ckpt vitb_384_mae_ce_32x4_ep300 \
+      --mask_idx 1 \
+      --config ./nerf/configs/horns.txt \
+      --expname horns
+```
+The `--mask_idx` is usually set to 1, which typically is the most confident mask result of the first frame. If the object is not segmented out well, you can try other masks (0 or 2).
 
 
 ## <span id="remove-anything-video">📌 Remove Anything Video</span>
