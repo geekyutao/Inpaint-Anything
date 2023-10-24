@@ -10,6 +10,7 @@ import torch
 import tempfile
 # from omegaconf import OmegaConf
 # from sam_segment import predict_masks_with_sam
+from stable_diffusion_inpaint import replace_img_with_sd
 from lama_inpaint import inpaint_img_with_lama, build_lama_model, inpaint_img_with_builded_lama
 from utils import load_img_to_array, save_array_to_img, dilate_mask, \
     show_mask, show_points
@@ -96,6 +97,16 @@ def get_masked_img(img, w, h, features, orig_h, orig_w, input_h, input_w, dilate
         plt.close()
     return *figs, *masks
 
+def get_replace_img_with_sd(img, mask0, mask1, mask2, text_prompt):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    out = []
+    for mask in [mask0, mask1, mask2]:
+        if len(mask.shape)==3:
+            mask = mask[:,:,0]
+        img_replaced = replace_img_with_sd(img, mask, text_prompt, device=device)
+        img_replaced = Image.fromarray(img_replaced.astype(np.uint8))
+        out.append(img_replaced)
+    return out
 
 def get_inpainted_img(img, mask0, mask1, mask2):
     lama_config = args.lama_config
@@ -156,8 +167,10 @@ with gr.Blocks() as demo:
                 w = gr.Number(label="Point Coordinate W")
                 h = gr.Number(label="Point Coordinate H")
             dilate_kernel_size = gr.Slider(label="Dilate Kernel Size", minimum=0, maximum=100, step=1, value=15)
+            text_prompt = gr.Textbox(label="Text Prompt")
             sam_mask = gr.Button("Predict Mask", variant="primary").style(full_width=True, size="sm")
             lama = gr.Button("Inpaint Image", variant="primary").style(full_width=True, size="sm")
+            replace_sd = gr.Button("Replace Anything with SD", variant="primary").style(full_width=True, size="sm")
             clear_button_image = gr.Button(value="Reset", label="Reset", variant="secondary").style(full_width=True, size="sm")
 
     # todo: maybe we can delete this row, for it's unnecessary to show the original mask for customers
@@ -190,6 +203,18 @@ with gr.Blocks() as demo:
                     type="numpy", label="Image Removed with Segmentation Mask 1").style(height="200px")
                 img_rm_with_mask_2 = gr.outputs.Image(
                     type="numpy", label="Image Removed with Segmentation Mask 2").style(height="200px")
+                
+    with gr.Row(variant="panel"):
+        with gr.Column():
+            with gr.Row():
+                gr.Markdown("## Replace Anything with Mask")
+            with gr.Row():
+                img_replace_with_mask_0 = gr.outputs.Image(
+                    type="pil", label="Image Replace Anything with Mask 0").style(height="200px")
+                img_replace_with_mask_1 = gr.outputs.Image(
+                    type="pil", label="Image Replace Anything with Mask 1").style(height="200px")
+                img_replace_with_mask_2 = gr.outputs.Image(
+                    type="pil", label="Image Replace Anything with Mask 2").style(height="200px")
 
 
     def get_select_coords(img, evt: gr.SelectData):
@@ -217,6 +242,12 @@ with gr.Blocks() as demo:
         [img, mask_0, mask_1, mask_2],
         [img_rm_with_mask_0, img_rm_with_mask_1, img_rm_with_mask_2]
     )
+    
+    replace_sd.click(
+        get_replace_img_with_sd,
+        [img, mask_0, mask_1, mask_2, text_prompt],
+        [img_replace_with_mask_0, img_replace_with_mask_1, img_replace_with_mask_2]
+    )
 
 
     def reset(*args):
@@ -224,8 +255,8 @@ with gr.Blocks() as demo:
 
     clear_button_image.click(
         reset,
-        [img, features, img_pointed, w, h, mask_0, mask_1, mask_2, img_with_mask_0, img_with_mask_1, img_with_mask_2, img_rm_with_mask_0, img_rm_with_mask_1, img_rm_with_mask_2],
-        [img, features, img_pointed, w, h, mask_0, mask_1, mask_2, img_with_mask_0, img_with_mask_1, img_with_mask_2, img_rm_with_mask_0, img_rm_with_mask_1, img_rm_with_mask_2]
+        [img, features, img_pointed, w, h, mask_0, mask_1, mask_2, img_with_mask_0, img_with_mask_1, img_with_mask_2, img_rm_with_mask_0, img_rm_with_mask_1, img_rm_with_mask_2, img_replace_with_mask_0, img_replace_with_mask_1, img_replace_with_mask_2],
+        [img, features, img_pointed, w, h, mask_0, mask_1, mask_2, img_with_mask_0, img_with_mask_1, img_with_mask_2, img_rm_with_mask_0, img_rm_with_mask_1, img_rm_with_mask_2, img_replace_with_mask_0, img_replace_with_mask_1, img_replace_with_mask_2]
     )
 
 if __name__ == "__main__":
