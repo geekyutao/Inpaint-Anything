@@ -16,6 +16,5 @@ tabulate
 kornia==0.5.0
 webdataset
 packaging
-scikit-learn==0.24.2
 wldhx.yadisk-direct
 timm
