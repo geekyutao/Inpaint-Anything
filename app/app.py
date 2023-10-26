@@ -52,12 +52,17 @@ def get_sam_feat(img):
     model['sam'].reset_image()
     return features, orig_h, orig_w, input_h, input_w
 
-def get_replace_img_with_sd(img, mask, text_prompt):
+def get_replace_img_with_sd(image, mask, image_resolution, text_prompt):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if len(mask.shape)==3:
         mask = mask[:,:,0]
-    img_replaced = replace_img_with_sd(img, mask, text_prompt, device=device)
-    img_replaced = Image.fromarray(img_replaced.astype(np.uint8))
+    np_image = np.array(image, dtype=np.uint8)
+    H, W, C = np_image.shape
+    np_image = HWC3(np_image)
+    np_image = resize_image(np_image, image_resolution)
+
+    img_replaced = replace_img_with_sd(np_image, mask, text_prompt, device=device)
+    img_replaced = img_replaced.astype(np.uint8)
     return img_replaced
 
 def HWC3(x):
@@ -186,9 +191,11 @@ def process_image_click(original_image, point_prompt, clicked_points, image_reso
     )
 
     return (
-        Image.fromarray(overlay_image),
+        overlay_image,
+        # Image.fromarray(overlay_image),
         clicked_points,
-        Image.fromarray(mask_image),
+        # Image.fromarray(mask_image),
+        mask_image
     )
 
 def image_upload(image, image_resolution):
@@ -202,13 +209,13 @@ def image_upload(image, image_resolution):
     else:
         return None, None, None, None, None, None
 
-def get_inpainted_img(img, mask):
+def get_inpainted_img(image, mask, image_resolution):
     lama_config = args.lama_config
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if len(mask.shape)==3:
         mask = mask[:,:,0]
     img_inpainted = inpaint_img_with_builded_lama(
-        model['lama'], img, mask, lama_config, device=device)
+        model['lama'], image, mask, lama_config, device=device)
     return img_inpainted
 
 
@@ -250,7 +257,7 @@ with gr.Blocks() as demo:
             with gr.Row():
                 # img = gr.Image(label="Input Image")
                 source_image_click = gr.Image(
-                    type="pil",
+                    type="numpy",
                     height=300,
                     interactive=True,
                     label="Image: Upload an image and click the region you want to edit.",
@@ -271,7 +278,7 @@ with gr.Blocks() as demo:
                     value=512,
                     step=64,
                 )
-                dilate_kernel_size = gr.Slider(label="Dilate Kernel Size", minimum=0, maximum=30, step=1, value=7)
+                dilate_kernel_size = gr.Slider(label="Dilate Kernel Size", minimum=0, maximum=30, step=1, value=3)
         with gr.Column(variant="panel"):
             with gr.Row():
                 gr.Markdown("## Control Panel")
@@ -298,7 +305,7 @@ with gr.Blocks() as demo:
                 gr.Markdown("## Replace Anything with Mask")
             with gr.Row():
                 img_replace_with_mask = gr.Image(
-                    type="pil", label="Image Replace Anything with Mask")
+                    type="numpy", label="Image Replace Anything with Mask")
 
     source_image_click.upload(
         image_upload,
@@ -323,13 +330,13 @@ with gr.Blocks() as demo:
 
     lama.click(
         get_inpainted_img,
-        [origin_image, click_mask],
+        [origin_image, click_mask, image_resolution],
         [img_rm_with_mask]
     )
     
     replace_sd.click(
         get_replace_img_with_sd,
-        [origin_image, click_mask, text_prompt],
+        [origin_image, click_mask, image_resolution, text_prompt],
         [img_replace_with_mask]
     )
 
