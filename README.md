@@ -13,7 +13,47 @@ Inpaint Anything can inpaint anything in **images**, **videos** and **3D scenes*
 
 TL; DR: Users can select any object in an image by clicking on it. With powerful vision models, e.g., [SAM](https://arxiv.org/abs/2304.02643), [LaMa](https://arxiv.org/abs/2109.07161) and [Stable Diffusion (SD)](https://arxiv.org/abs/2112.10752), **Inpaint Anything** is able to remove the object smoothly (i.e., *Remove Anything*). Further, prompted by user input text, Inpaint Anything can fill the object with any desired content (i.e., *Fill Anything*) or replace the background of it arbitrarily (i.e., *Replace Anything*).
 
+---
+
+## 🚧 New: [`main_2026`](https://github.com/geekyutao/Inpaint-Anything/tree/main_2026) branch — modernized stack + robotics support (beta)
+
+The [**`main_2026`**](https://github.com/geekyutao/Inpaint-Anything/tree/main_2026)
+branch brings Inpaint Anything up to date with the 2026 model landscape, and adds
+a new direction: **data engineering for robotics**.
+
+| | `main` (this branch) | [`main_2026`](https://github.com/geekyutao/Inpaint-Anything/tree/main_2026) |
+| --- | --- | --- |
+| Segmentation | SAM 1 | **SAM 3** — plus open-vocabulary *text* prompts |
+| Video / 3D tracking | OSTrack | **SAM 3 video predictor** — one less model and checkpoint |
+| Video inpainting | STTN | **ProPainter** |
+| Text-guided fill / replace | SD 2 *(no longer downloadable)* | **SDXL**, optional **FLUX.1-Fill** |
+| Robotics | — | **`remove_hands.py`** — batch hand removal for Human-to-Robot pipelines |
+
+Two things you can do there that you cannot do here:
+
+- **Name the object instead of clicking it.** `--text_select "dog"` finds every match, which also means the pipelines can run unattended over a whole dataset.
+- **Prepare egocentric data for robot learning.** `remove_hands.py` erases human hands from egocentric video and exports the masks — the *hand removal and inpainting* stage of Human-to-Robot synthesis pipelines such as [Qwen-RobotManip](https://github.com/QwenLM/Qwen-RobotManip) and [EgoEngine](https://egoengine.github.io/). On EgoMimic footage it matches human annotation at IoU 0.96, and it reconstructs the background rather than blacking the arm out.
+
+```bash
+git checkout main_2026
+# then follow the Quick start in that branch's README
+```
+
+> ⚠️ **`main_2026` is in beta.** It needs Python ≥ 3.12, PyTorch ≥ 2.7 and
+> CUDA ≥ 12.6 (SAM 3's floor), and the NeRF-based 3D path has not been
+> end-to-end verified on that stack yet. Every legacy backend
+> (SAM 1 / MobileSAM, OSTrack, STTN) is still selectable by flag, so you can fall
+> back per stage.
+>
+> 🤝 **Contributions very welcome** — especially on the robotics side. Issues and
+> PRs against `main_2026` are appreciated: more egocentric datasets, action
+> retargeting, robot rendering and compositing, or newer inpainting backends.
+> Please open an issue if you hit anything.
+
+---
+
 ## 📜 News
+[2026/7/28] <span style="color:red">🔥NEW</span> [**`main_2026`**](https://github.com/geekyutao/Inpaint-Anything/tree/main_2026) **branch (beta):** upgraded to [SAM 3](https://github.com/facebookresearch/sam3) with text prompts, [ProPainter](https://github.com/sczhou/ProPainter) for video, SDXL/FLUX for text-guided editing, and **robotics support** via `remove_hands.py`. OSTrack is no longer needed. Contributions welcome!\
 [2023/9/15] [Remove Anything 3D](#remove-anything-3d) code is available!\
 [2023/4/30] [Remove Anything Video](#remove-anything-video) available! You can remove any object from a video!\
 [2023/4/24] [Local web UI](./app) supported! You can run the demo website locally!\
