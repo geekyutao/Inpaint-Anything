@@ -5,9 +5,18 @@
 hand placing a bowl on a table.
 
 ```
-frames/                 original RGB frames (front_img_1)
-egomimic_masked/        EgoMimic's own hand-masked variant (front_img_1_masked)
+demo/                   original | SAM 3 mask | ProPainter result (stills + gifs)
 comparison/             original | EgoMimic's black-out | our inpainting
+frames/                 original RGB frames (front_img_1)          [not tracked]
+egomimic_masked/        EgoMimic's hand-masked variant             [not tracked]
+```
+
+The two frame folders are not committed — rerun `script/fetch_ego_demo.py` to
+get them back. `demo/` was produced by:
+
+```bash
+python remove_hands.py --input_dir example/ego --output_dir /tmp/out \
+    --exclude comparison egomimic_masked demo --save_masks
 ```
 
 `egomimic_masked/` is useful twice over: it shows what the dataset authors ship

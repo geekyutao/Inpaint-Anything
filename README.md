@@ -780,22 +780,46 @@ sanity-check quality before committing to a full pass.
 
 ### Test clip included
 
-`example/ego/` holds 40 frames from [EgoMimic](https://huggingface.co/datasets/gatech/EgoMimic)
-(Aria glasses, hand placing a bowl) together with EgoMimic's own hand-masked
-variant. Grab more with `python script/fetch_ego_demo.py --demos list`, which
-reads the remote HDF5 over range requests instead of downloading 40GB.
+`example/ego/` holds a clip from [EgoMimic](https://huggingface.co/datasets/gatech/EgoMimic)
+(Aria glasses, hand placing a bowl). Grab more with
+`python script/fetch_ego_demo.py --demos list`, which reads the remote HDF5 over
+range requests instead of downloading 40GB.
 
-Running our inpainting against EgoMimic's own arm annotation shows the
-difference in approach — they black the arm out, we reconstruct the table
-behind it:
+Here is the whole thing running on it, driven only by the phrase
+`"hands and forearms"` — no clicking:
+
+<table>
+  <tr>
+    <td><img src="./example/ego/demo_100/demo/original.gif" width="100%"></td>
+    <td><img src="./example/ego/demo_100/demo/mask.gif" width="100%"></td>
+    <td><img src="./example/ego/demo_100/demo/removed.gif" width="100%"></td>
+  </tr>
+  <tr>
+    <td align="center"><em>input</em></td>
+    <td align="center"><em>SAM 3 mask, tracked</em></td>
+    <td align="center"><em>ProPainter result</em></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td><img src="./example/ego/demo_100/demo/original.png" width="100%"></td>
+    <td><img src="./example/ego/demo_100/demo/with_mask.png" width="100%"></td>
+    <td><img src="./example/ego/demo_100/demo/removed.png" width="100%"></td>
+  </tr>
+</table>
+
+The mask is worth looking at on its own: it is produced from a text phrase and
+propagated by SAM 3, and it agrees with EgoMimic's human annotation at **IoU
+0.96**. Their released `_masked` variant paints the arm solid black, whereas
+this reconstructs the table behind it — a black blob is an out-of-distribution
+artifact for whatever policy trains on these frames, a reconstructed table is
+not:
 
 <p align="center">
-  <img src="./example/ego/demo_100/comparison/original_vs_egomimic_vs_ours_f18.png" width="100%">
-  <br><em>original · EgoMimic's black-out · ProPainter reconstruction</em>
+  <img src="./example/ego/demo_100/comparison/original_vs_egomimic_vs_ours_f18.png" width="70%">
+  <br><em>input · EgoMimic's black-out · ours</em>
 </p>
-
-A black blob is an out-of-distribution artifact for whatever policy trains on
-these frames; a reconstructed table is not.
 
 ### Compositing a robot in afterwards
 
