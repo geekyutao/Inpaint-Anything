@@ -541,7 +541,17 @@ If you find this work useful for your research, please cite us:
 ```
   
 <p align="center">
-  <a href="https://star-history.com/#geekyutao/Inpaint-Anything&Date">
-    <img src="https://api.star-history.com/svg?repos=geekyutao/Inpaint-Anything&type=Date" alt="Star History Chart">
+  <a href="https://github.com/geekyutao/Inpaint-Anything/stargazers">
+    <img src="https://img.shields.io/github/stars/geekyutao/Inpaint-Anything?style=social" alt="GitHub stars">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.star-history.com/#geekyutao/Inpaint-Anything&Date">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=geekyutao/Inpaint-Anything&type=Date&theme=dark">
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=geekyutao/Inpaint-Anything&type=Date">
+      <img src="https://api.star-history.com/svg?repos=geekyutao/Inpaint-Anything&type=Date" alt="Star History Chart">
+    </picture>
   </a>
 </p>
