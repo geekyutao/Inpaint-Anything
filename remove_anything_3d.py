@@ -12,10 +12,17 @@ import imageio.v2 as iio
 import tempfile
 import matplotlib.patches as patches
 from typing import Any, Dict, List
-from pytracking.lib.test.evaluation.data import Sequence
-from sam_segment import build_sam_model
+from sam_segment import build_sam_model, ALL_MODEL_TYPES, DEFAULT_SAM3_CKPT
 from lama_inpaint import build_lama_model, inpaint_img_with_builded_lama
-from ostrack import build_ostrack_model, get_box_using_ostrack
+from sam3_video_track import build_sam3_video_tracker, track_masks_in_video
+
+
+def _import_ostrack():
+    """OSTrack pulls in the pytracking tree and mutates sys.path, so it is only
+    imported when that backend is actually selected."""
+    from ostrack import build_ostrack_model, get_box_using_ostrack
+    from pytracking.lib.test.evaluation.data import Sequence
+    return build_ostrack_model, get_box_using_ostrack, Sequence
 from utils import load_img_to_array, save_array_to_img, dilate_mask, \
     show_mask, show_points, get_clicked_point
 from nerf.run_nerf import train
@@ -28,17 +35,26 @@ def setup_args(parser):
         help="Path to the directory with source images",
     )
     parser.add_argument(
-        "--coords_type", type=str, required=True,
+        "--coords_type", type=str,
         default="key_in", choices=["click", "key_in"], 
         help="The way to select coords",
     )
     parser.add_argument(
-        "--point_coords", type=float, nargs='+', required=True,
+        "--point_coords", type=float, nargs='+', default=None,
         help="The coordinate of the point prompt, [coord_W coord_H].",
     )
     parser.add_argument(
-        "--point_labels", type=int, default=1, nargs='+', required=True,
+        "--point_labels", type=int, default=None, nargs='+',
         help="The labels of the point prompt, 1 or 0.",
+    )
+    parser.add_argument(
+        "--text_select", type=str, default=None,
+        help="SAM 3 only: pick the target in the first view with a noun "
+             "phrase instead of a point.",
+    )
+    parser.add_argument(
+        "--text_confidence", type=float, default=0.5,
+        help="Confidence threshold for --text_select. Default: 0.5",
     )
     parser.add_argument(
         "--dilate_kernel_size", type=int, default=15,
@@ -50,11 +66,11 @@ def setup_args(parser):
     )
     parser.add_argument(
         "--sam_model_type", type=str,
-        default="vit_h", choices=['vit_h', 'vit_l', 'vit_b', 'vit_t'],
-        help="The type of sam model to load. Default: 'vit_h"
+        default="sam3", choices=list(ALL_MODEL_TYPES),
+        help="The type of sam model to load. Default: 'sam3'",
     )
     parser.add_argument(
-        "--sam_ckpt", type=str, required=True,
+        "--sam_ckpt", type=str, default=DEFAULT_SAM3_CKPT,
         help="The path to the SAM checkpoint to use for mask generation.",
     )
     parser.add_argument(
@@ -64,16 +80,25 @@ def setup_args(parser):
              "Default: the config of big-lama",
     )
     parser.add_argument(
-        "--lama_ckpt", type=str, required=True,
+        "--lama_ckpt", type=str, default="./pretrained_models/big-lama",
         help="The path to the lama checkpoint.",
     )
     parser.add_argument(
-        "--tracker_ckpt", type=str, required=True,
-        help="The path to tracker checkpoint.",
+        "--tracker", type=str, default="sam3", choices=["sam3", "ostrack"],
+        help="How to follow the object across views. 'sam3' propagates the mask "
+             "with SAM 3's video predictor and needs no extra checkpoint; "
+             "'ostrack' is the legacy box tracker. Default: sam3",
     )
     parser.add_argument(
-        "--mask_idx", type=int, default=1, required=True,
-        help="Which mask in the first frame to determine the inpaint region.",
+        "--tracker_ckpt", type=str, default=None,
+        help="OSTrack config name, resolved to "
+             "./pytracking/pretrain/<name>.pth. Only used with "
+             "--tracker ostrack.",
+    )
+    parser.add_argument(
+        "--mask_idx", type=int, default=None,
+        help="Which of SAM's three first-view candidates to track (0, 1 or 2). "
+             "Left unset, SAM 3 segments the first view itself.",
     )
 
     #novel views synthesis option
@@ -267,13 +292,15 @@ class RemoveAnything3D(nn.Module):
     def __init__(
             self, 
             args,
-            tracker_target="ostrack",
+            tracker_target=None,
             segmentor_target="sam",
             inpainter_target="lama",
     ):
         super().__init__()
+        tracker_target = tracker_target or getattr(args, "tracker", "sam3")
         tracker_build_args = {
-            "tracker_param": args.tracker_ckpt
+            "ostrack": {"tracker_param": args.tracker_ckpt},
+            "sam3": {"ckpt_p": args.sam_ckpt, "device": self.device},
         }
         segmentor_build_args = {
             "model_type": args.sam_model_type,
@@ -285,9 +312,13 @@ class RemoveAnything3D(nn.Module):
         }
 
         self.tracker = self.build_tracker(
-            tracker_target, **tracker_build_args)
-        self.segmentor = self.build_segmentor(
-            segmentor_target, **segmentor_build_args)
+            tracker_target, **tracker_build_args[tracker_target])
+        if tracker_target == "sam3":
+            # Reuse the detector inside the video model instead of a second copy.
+            self.segmentor = getattr(self.tracker, "text_segmentor", None)
+        else:
+            self.segmentor = self.build_segmentor(
+                segmentor_target, **segmentor_build_args)
         self.inpainter = self.build_inpainter(
             inpainter_target, **inpainter_build_args)
         self.tracker_target = tracker_target
@@ -295,8 +326,16 @@ class RemoveAnything3D(nn.Module):
         self.inpainter_target = inpainter_target
 
     def build_tracker(self, target, **kwargs):
-        assert target == "ostrack", "Only support sam now."
-        return build_ostrack_model(**kwargs)
+        if target == "sam3":
+            return build_sam3_video_tracker(**kwargs)
+        elif target == "ostrack":
+            if not kwargs.get("tracker_param"):
+                raise ValueError(
+                    "--tracker ostrack requires --tracker_ckpt, e.g. "
+                    "vitb_384_mae_ce_32x4_ep300")
+            build_ostrack_model, _, _ = _import_ostrack()
+            return build_ostrack_model(**kwargs)
+        raise NotImplementedError("Only sam3 and ostrack are supported")
 
     def build_segmentor(self, target="sam", **kwargs):
         assert target == "sam", "Only support sam now."
@@ -308,6 +347,7 @@ class RemoveAnything3D(nn.Module):
 
 
     def forward_tracker(self, image_ps, init_box):
+        _, get_box_using_ostrack, Sequence = _import_ostrack()
         init_box = np.array(init_box).astype(np.float32).reshape(-1, 4)
         seq = Sequence("tmp", image_ps, 'inpaint-anything', init_box)
         all_box_xywh = get_box_using_ostrack(self.tracker, seq)
@@ -326,6 +366,17 @@ class RemoveAnything3D(nn.Module):
             multimask_output=multimask_output,
             return_logits=return_logits
         )
+        self.segmentor.reset_image()
+        return masks, scores
+
+    def forward_segmentor_text(self, img, text, confidence=0.5):
+        if not hasattr(self.segmentor, "predict_text"):
+            raise ValueError(
+                "--text_select requires --sam_model_type sam3."
+            )
+        self.segmentor.set_image(img)
+        masks, scores, _ = self.segmentor.predict_text(
+            text, confidence_threshold=confidence)
         self.segmentor.reset_image()
         return masks, scores
 
@@ -361,6 +412,42 @@ class RemoveAnything3D(nn.Module):
         x, y, w, h = cv2.boundingRect(mask)
         return np.array([x, y, w, h])
 
+    def _track_with_sam3(self, image_ps, point_coords, point_labels, mask_idx,
+                         dilate_kernel_size, text, text_confidence):
+        """Propagate the first view's selection across the remaining views.
+
+        Neighbouring views of a static scene move much like consecutive video
+        frames, so SAM 3's video predictor handles them directly and no separate
+        tracker checkpoint is needed.
+        """
+        key_image = iio.imread(image_ps[0])
+        seed = {}
+        if text:
+            key_masks, _ = self.forward_segmentor_text(
+                key_image, text, text_confidence)
+            seed["init_mask"] = key_masks[0]
+        elif mask_idx is not None:
+            key_masks, _ = self.forward_segmentor(
+                key_image, point_coords, point_labels)
+            seed["init_mask"] = key_masks[mask_idx]
+        else:
+            seed["point_coords"] = point_coords
+            seed["point_labels"] = point_labels
+
+        print("Tracking with SAM 3 ...")
+        view_dir = str(Path(image_ps[0]).parent)
+        raw_masks = track_masks_in_video(self.tracker, view_dir, **seed)
+
+        all_image = [iio.imread(p) for p in image_ps[:len(raw_masks)]]
+        all_mask, all_box = [], []
+        for m in raw_masks[:len(all_image)]:
+            m = m.astype(np.uint8)
+            if dilate_kernel_size is not None:
+                m = dilate_mask(m, dilate_kernel_size)
+            all_mask.append(m)
+            all_box.append(self.get_box_from_mask(m))
+        return all_image, all_mask, all_box
+
     def forward(
             self,
             image_ps: List[str],
@@ -369,23 +456,41 @@ class RemoveAnything3D(nn.Module):
             key_image_point_labels: np.ndarray,
             key_image_mask_idx: int = None,
             dilate_kernel_size: int = 15,
+            key_image_text: str = None,
+            text_confidence: float = 0.5,
     ):
         """
         Mask is 0-1 ndarray in default
         """
         assert key_image_idx == 0, "Only support key image at the beginning."
 
+        if self.tracker_target == "sam3":
+            all_image, all_mask, all_box = self._track_with_sam3(
+                image_ps, key_image_point_coords, key_image_point_labels,
+                key_image_mask_idx, dilate_kernel_size, key_image_text,
+                text_confidence)
+            print("Inpainting ...")
+            all_image = self.forward_inpainter(all_image, all_mask)
+            return all_image, all_mask, all_box
+
         # get key-image mask
         key_image_p = image_ps[key_image_idx]
         key_image = iio.imread(key_image_p)
-        key_masks, key_scores = self.forward_segmentor(
-            key_image, key_image_point_coords, key_image_point_labels)
-
-        # key-image mask selection
-        if key_image_mask_idx is not None:
-            key_mask = key_masks[key_image_mask_idx]
+        if key_image_text:
+            # Tracking follows a single box, so keep the best-scoring instance
+            # rather than merging everything the phrase matched.
+            key_masks, key_scores = self.forward_segmentor_text(
+                key_image, key_image_text, text_confidence)
+            key_mask = key_masks[0]
         else:
-            key_mask = self.mask_selection(key_masks, key_scores)
+            key_masks, key_scores = self.forward_segmentor(
+                key_image, key_image_point_coords, key_image_point_labels)
+
+            # key-image mask selection
+            if key_image_mask_idx is not None:
+                key_mask = key_masks[key_image_mask_idx]
+            else:
+                key_mask = self.mask_selection(key_masks, key_scores)
         
         if dilate_kernel_size is not None:
             key_mask = dilate_mask(key_mask, dilate_kernel_size)
@@ -479,12 +584,23 @@ if __name__ == "__main__":
         --point_labels 1 \
         --dilate_kernel_size 15 \
         --output_dir ./results \
-        --sam_model_type "vit_h" \
-        --sam_ckpt ./pretrained_models/sam_vit_h_4b8939.pth \
+        --sam_model_type "sam3" \
+        --sam_ckpt ./pretrained_models/sam3.pt \
         --lama_config ./lama/configs/prediction/default.yaml \
         --lama_ckpt ./pretrained_models/big-lama \
         --tracker_ckpt vitb_384_mae_ce_32x4_ep300 \
         --mask_idx 1 \
+        --config ./nerf/configs/horns.txt \
+        --expname horns
+
+    Or pick the target in the first view with a text phrase (SAM 3 only):
+    python remove_anything_3d.py \
+        --input_dir ./example/3d/horns \
+        --text_select "horns" \
+        --dilate_kernel_size 15 \
+        --output_dir ./results \
+        --lama_ckpt ./pretrained_models/big-lama \
+        --tracker_ckpt vitb_384_mae_ce_32x4_ep300 \
         --config ./nerf/configs/horns.txt \
         --expname horns
     """
@@ -518,14 +634,24 @@ if __name__ == "__main__":
         images_raw_dir = os.path.join(images_raw_dir,'images'+'_{}'.format(factor))
     else:
         images_raw_dir = os.path.join(images_raw_dir,'images')
-    image_ps = sorted(glob.glob(os.path.join(images_raw_dir,'*.png')))
+    image_ps = sorted(
+        p for ext in ('*.png', '*.jpg', '*.jpeg', '*.JPG', '*.JPEG')
+        for p in glob.glob(os.path.join(images_raw_dir, ext))
+    )
+    assert image_ps, f"No images found under {images_raw_dir}"
 
-    point_labels = np.array(args.point_labels)
-    if args.coords_type == "click":
-        point_coords = get_clicked_point(image_ps[0])
-    elif args.coords_type == "key_in":
-        point_coords = args.point_coords
-    point_coords = np.array([point_coords])
+    point_coords, point_labels = None, None
+    if not args.text_select:
+        if args.point_coords is None:
+            raise ValueError(
+                "Provide either --point_coords or --text_select to pick a target."
+            )
+        point_labels = np.array(args.point_labels)
+        if args.coords_type == "click":
+            point_coords = get_clicked_point(image_ps[0])
+        elif args.coords_type == "key_in":
+            point_coords = args.point_coords
+        point_coords = np.array([point_coords])
 
     #remove object from source images 
     # device = "cuda:4" if torch.cuda.is_available() else "cpu"
@@ -534,7 +660,7 @@ if __name__ == "__main__":
     with torch.no_grad():
         all_images_rm_w_mask, all_mask, all_box = model(
             image_ps, 0, point_coords, point_labels, key_image_mask_idx,
-            dilate_kernel_size
+            dilate_kernel_size, args.text_select, args.text_confidence
         )
 
     #save removed images

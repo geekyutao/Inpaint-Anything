@@ -24,7 +24,14 @@ from utils import load_img_to_array, save_array_to_img
 
 
 @torch.no_grad()
-def inpaint_img_with_lama(
+def inpaint_img_with_lama(*args, **kwargs):
+    from sam3_utils import no_autocast
+    with no_autocast():
+        return _inpaint_img_with_lama(*args, **kwargs)
+
+
+@torch.no_grad()
+def _inpaint_img_with_lama(
         img: np.ndarray,
         mask: np.ndarray,
         config_p: str,
@@ -111,7 +118,14 @@ def build_lama_model(
 
 
 @torch.no_grad()
-def inpaint_img_with_builded_lama(
+def inpaint_img_with_builded_lama(*args, **kwargs):
+    from sam3_utils import no_autocast
+    with no_autocast():
+        return _inpaint_img_with_builded_lama(*args, **kwargs)
+
+
+@torch.no_grad()
+def _inpaint_img_with_builded_lama(
         model,
         img: np.ndarray,
         mask: np.ndarray,

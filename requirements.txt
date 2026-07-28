@@ -1,0 +1,64 @@
+# Inpaint-Anything with SAM 3 + ProPainter.
+#
+# SAM 3 is not on PyPI. Clone and install it first:
+#     git clone https://github.com/facebookresearch/sam3.git sam3_repo
+#     pip install -e ./sam3_repo
+# The directory must NOT be named `sam3`, or it shadows the installed package
+# when scripts run from the repo root.
+#
+# ProPainter is used as a source checkout, not a package:
+#     git clone https://github.com/sczhou/ProPainter.git propainter
+#
+# Then:  pip install -r requirements.txt
+
+# --- core ---
+# SAM 3 needs Python >= 3.12, PyTorch >= 2.7 and CUDA >= 12.6.
+torch>=2.7
+torchvision
+numpy>=1.26,<2          # hard upper bound from SAM 3
+pycocotools             # SAM 3's inference path imports it transitively
+
+# --- LaMa (remove / video / 3D) ---
+pytorch-lightning>=2.0
+omegaconf
+hydra-core
+kornia>=0.7
+easydict
+scikit-image
+scikit-learn
+pandas
+matplotlib
+webdataset
+tabulate
+joblib
+albumentations
+
+# --- Stable Diffusion / FLUX (fill / replace, and optional high-quality remove) ---
+diffusers
+transformers
+accelerate
+safetensors
+sentencepiece           # FLUX.1-Fill's T5 tokenizer
+scipy
+
+# --- video: ProPainter, plus the legacy STTN/OSTrack path ---
+opencv-python
+imageio
+imageio-ffmpeg
+av
+einops
+tqdm
+jpeg4py
+lmdb
+
+# --- local web UI ---
+gradio
+
+# --- weight downloads ---
+huggingface_hub
+gdown
+
+# --- pulling egocentric test clips (script/fetch_ego_demo.py) ---
+h5py
+fsspec
+aiohttp

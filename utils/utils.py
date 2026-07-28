@@ -1,7 +1,12 @@
 import cv2
+import matplotlib
 import numpy as np
 from PIL import Image
 from typing import Any, Dict, List
+
+# Every entry point only writes figures to disk, never shows them. Pinning the
+# non-interactive backend keeps headless runs from crashing inside Tk.
+matplotlib.use("Agg")
 
 
 def load_img_to_array(img_p):

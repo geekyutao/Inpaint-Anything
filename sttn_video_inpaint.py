@@ -12,14 +12,24 @@ from PIL import Image
 from torchvision import transforms
 import imageio
 
-sys.path.insert(0, str(Path(__file__).resolve().parent / "sttn"))
-from core.utils import Stack, ToTorchFormatTensor
+STTN_DIR = Path(__file__).resolve().parent / "sttn"
 
 
-_to_tensors = transforms.Compose([
-    Stack(),
-    ToTorchFormatTensor()]
-)
+def _import_sttn():
+    """Put STTN on the import path lazily.
+
+    STTN and ProPainter both ship top-level `model` / `core` packages, so
+    importing eagerly would make the two backends clash. Only one video
+    inpainting backend can be used per process.
+    """
+    if str(STTN_DIR) not in sys.path:
+        sys.path.insert(0, str(STTN_DIR))
+
+
+def _get_to_tensors():
+    _import_sttn()
+    from core.utils import Stack, ToTorchFormatTensor
+    return transforms.Compose([Stack(), ToTorchFormatTensor()])
 
 
 def get_ref_index(neighbor_ids, length):
@@ -61,6 +71,7 @@ def read_frame_from_videos(vname):
 
 
 def build_sttn_model(ckpt_p, model_type="sttn", device="cuda"):
+    _import_sttn()
     net = importlib.import_module(f'model.{model_type}')
     model = net.InpaintGenerator().to(device)
     data = torch.load(ckpt_p, map_location=device)
@@ -79,6 +90,7 @@ def inpaint_video_with_builded_sttn(
     w, h = 432, 240
     neighbor_stride = 5
     video_length = len(frames)
+    _to_tensors = _get_to_tensors()
 
     feats = [frame.resize((w, h)) for frame in frames]
     feats = _to_tensors(feats).unsqueeze(0) * 2 - 1

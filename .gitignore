@@ -13,9 +13,24 @@ __pycache__/
 
 # pretrained_models
 pretrained_models/big-lama
+pretrained_models/config.json
+pretrained_models/propainter/
+pretrained_models/FLUX.1-Fill-dev/
+
+# Egocentric test frames are pulled from third-party datasets on demand with
+# script/fetch_ego_demo.py; only the comparison figures are tracked.
+example/ego/*/frames/
+example/ego/*/egomimic_masked/
 # pytracking/pretrain/
 *.pth
+*.pt
+!weights/mobile_sam.pt
+
+# Upstream checkouts, cloned rather than vendored
+sam3_repo/
+propainter/
 
 results/*
+results_*/
 
 

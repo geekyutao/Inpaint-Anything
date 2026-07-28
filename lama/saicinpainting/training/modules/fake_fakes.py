@@ -1,5 +1,10 @@
 import torch
-from kornia import SamplePadding
+
+try:
+    from kornia import SamplePadding
+except ImportError:
+    # kornia >= 0.7 moved SamplePadding out of the top-level namespace.
+    from kornia.constants import SamplePadding
 from kornia.augmentation import RandomAffine, CenterCrop
 
 

@@ -1,5 +1,26 @@
-from albumentations import DualIAATransform, to_tuple
-import imgaug.augmenters as iaa
+try:
+    from albumentations import DualIAATransform, to_tuple
+except ImportError:
+    # albumentations >= 1.0 dropped the imgaug-backed DualIAATransform. The two
+    # transforms below are training-only, but this module sits on the import path
+    # of the inference entry points, so it must stay importable without imgaug.
+    from albumentations import DualTransform as DualIAATransform
+    from albumentations.core.utils import to_tuple
+
+try:
+    import imgaug.augmenters as iaa
+except ImportError:
+    iaa = None
+
+
+def _require_imgaug():
+    if iaa is None:
+        raise ImportError(
+            "imgaug is required for IAAAffine2/IAAPerspective2 (LaMa training-time "
+            "augmentations) but is not installed. Inference does not need them."
+        )
+    return iaa
+
 
 class IAAAffine2(DualIAATransform):
     """Place a regular grid of points on the input and randomly move the neighbourhood of these point around
@@ -39,6 +60,7 @@ class IAAAffine2(DualIAATransform):
 
     @property
     def processor(self):
+        iaa = _require_imgaug()
         return iaa.Affine(
             self.scale,
             self.translate_percent,
@@ -78,6 +100,7 @@ class IAAPerspective2(DualIAATransform):
 
     @property
     def processor(self):
+        iaa = _require_imgaug()
         return iaa.PerspectiveTransform(self.scale, keep_size=self.keep_size, mode=self.mode, cval=self.cval)
 
     def get_transform_init_args_names(self):
