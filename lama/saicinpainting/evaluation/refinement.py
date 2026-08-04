@@ -196,7 +196,8 @@ def _get_image_mask_pyramid(batch : dict, min_side : int, max_scales : int, px_b
     assert batch['image'].shape[0] == 1, "refiner works on only batches of size 1!"
 
     h, w = batch['unpad_to_size']
-    h, w = h[0].item(), w[0].item()
+    # h, w = h[0].item(), w[0].item()
+    h, w = h.item(), w.item()
 
     image = batch['image'][...,:h,:w]
     mask = batch['mask'][...,:h,:w]

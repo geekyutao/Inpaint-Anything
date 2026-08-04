@@ -58,13 +58,15 @@ def inpaint_img_with_lama(
     model = load_checkpoint(
         train_config, checkpoint_path, strict=False, map_location='cpu')
     model.freeze()
-    if not predict_config.get('refine', False):
-        model.to(device)
+    # if not predict_config.get('refine', False):
+    #     model.to(device)
+    model.to(device)
 
     batch = {}
     batch['image'] = img.permute(2, 0, 1).unsqueeze(0)
     batch['mask'] = mask[None, None]
     unpad_to_size = [batch['image'].shape[2], batch['image'].shape[3]]
+    batch['unpad_to_size']= torch.tensor(unpad_to_size).to(device)
     batch['image'] = pad_tensor_to_modulo(batch['image'], mod)
     batch['mask'] = pad_tensor_to_modulo(batch['mask'], mod)
     batch = move_to_device(batch, device)
@@ -73,7 +75,21 @@ def inpaint_img_with_lama(
     batch = model(batch)
     cur_res = batch[predict_config.out_key][0].permute(1, 2, 0)
     cur_res = cur_res.detach().cpu().numpy()
-
+    # Feature Refinement to Improve High Resolution Image Inpainting    
+    if predict_config.get('refine', False):
+       # assert 'unpad_to_size' in batch, "Unpadded size is required for the refinement"
+       # image unpadding is taken care of in the refiner
+       # is same size as the input image
+       cur_res = refine_predict(batch, model, **predict_config.refiner)
+       cur_res = cur_res[0].permute(1, 2, 0).detach().cpu().numpy()
+    else:
+        with torch.no_grad():
+            batch = move_to_device(batch, device)
+            batch['mask'] = (batch['mask'] > 0) * 1
+            batch = model(batch)
+            cur_res = batch[predict_config.out_key][0].permute(1, 2, 0).detach().cpu().numpy()
+            unpad_to_size = batch.get('unpad_to_size', None)
+                
     if unpad_to_size is not None:
         orig_height, orig_width = unpad_to_size
         cur_res = cur_res[:orig_height, :orig_width]
