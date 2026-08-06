@@ -285,7 +285,7 @@ with gr.Blocks() as demo:
             text_prompt = gr.Textbox(label="Text Prompt")
             lama = gr.Button("Inpaint Image", variant="primary")
             replace_sd = gr.Button("Replace Anything with SD", variant="primary")
-            clear_button_image = gr.Button(value="Reset", label="Reset", variant="secondary")
+            clear_button_image = gr.Button(value="Reset", label="Reset", variant="secondary") if hasattr(gr.Button, 'label') else gr.Button(value="Reset", variant="secondary")                
 
     # todo: maybe we can delete this row, for it's unnecessary to show the original mask for customers
     with gr.Row(variant="panel"):
