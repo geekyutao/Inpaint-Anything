@@ -1,0 +1,29 @@
+{
+    "test_type": "weather",
+    "variations": {
+        "rainy": {
+            "prompt": "scene in heavy rain with water droplets and wet surfaces",
+            "description": "Testing object persistence in rainy conditions"
+        },
+        "snowy": {
+            "prompt": "scene covered in snow with snowflakes falling",
+            "description": "Testing object persistence in snowy conditions"
+        },
+        "foggy": {
+            "prompt": "scene in thick fog with misty atmosphere",
+            "description": "Testing object persistence in foggy conditions"
+        },
+        "sunny": {
+            "prompt": "scene on a bright sunny day with clear sky",
+            "description": "Testing object persistence in sunny conditions"
+        },
+        "stormy": {
+            "prompt": "scene during a thunderstorm with dark clouds",
+            "description": "Testing object persistence in stormy conditions"
+        }
+    },
+    "default_params": {
+        "sam_model_type": "vit_h",
+        "sam_ckpt": "/workspaces/Advanced-MRs-for-VLMs/weights/mobile_sam.pt"
+    }
+}
