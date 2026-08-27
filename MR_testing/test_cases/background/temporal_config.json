@@ -1,0 +1,29 @@
+{
+    "test_type": "temporal",
+    "variations": {
+        "night": {
+            "prompt": "scene at night with moonlight and stars",
+            "description": "Testing object persistence at night"
+        },
+        "sunset": {
+            "prompt": "scene during golden sunset with orange sky",
+            "description": "Testing object persistence during sunset"
+        },
+        "dawn": {
+            "prompt": "scene at early dawn with soft morning light",
+            "description": "Testing object persistence at dawn"
+        },
+        "dusk": {
+            "prompt": "scene at dusk with dimming light",
+            "description": "Testing object persistence at dusk"
+        },
+        "noon": {
+            "prompt": "scene at bright noon with overhead sun",
+            "description": "Testing object persistence at noon"
+        }
+    },
+    "default_params": {
+        "sam_model_type": "vit_h",
+        "sam_ckpt": "/workspaces/Advanced-MRs-for-VLMs/weights/mobile_sam.pt"
+    }
+}
